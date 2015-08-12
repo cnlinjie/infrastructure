@@ -14,7 +14,10 @@
 
     <properties>
         <slf4j-version>1.7.5</slf4j-version>
+        <commons-lang3-version>3.3.2</commons-lang3-version>
+        <thumbnailator-version>0.4.8</thumbnailator-version>
     </properties>
+
 
     <dependencyManagement>
         <dependencies>
@@ -23,6 +26,19 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j-version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3-version}</version>
+            </dependency>
+
+            <!-- 图片压缩、缩放、加水印等 -->
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator-version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
