@@ -28,7 +28,7 @@ public class Page<T> {
 
     /**
      * 设置当前页
-     * @param no
+     * @param page
      */
     public void setPage(int page) {
         if (page <= 0)
@@ -46,7 +46,7 @@ public class Page<T> {
 
     /**
      * 设置每页记录数
-     * @param size
+     * @param rows
      */
     public void setRows(int rows) {
         this.rows = rows;
