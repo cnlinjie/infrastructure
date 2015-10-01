@@ -32,7 +32,6 @@ public interface IDao<T ,PK extends Serializable> {
 
     // 查全部
     public List<T> findAll();
-
     // 保存
     public PK save(T t);
 
