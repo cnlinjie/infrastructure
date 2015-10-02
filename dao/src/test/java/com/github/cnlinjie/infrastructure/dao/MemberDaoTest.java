@@ -72,15 +72,14 @@ public class MemberDaoTest extends BaseTest {
 
         Page<Member> page2 = dao.page(CriteriaParams.
                 Add(Restrictions.eq("password", "123123"))
-                .addOrder(Order.asc("pkId"))
-                .addProjection(Projections.property("password"), Projections.property("phone")), PageParams.page(1, 10));
+                .addOrder(Order.asc("pkId")), PageParams.page(1, 10));
 
         List<Member> content = page2.getContent();
         System.out.println(content);
         System.out.println(page);
     }
 
-//    @Test
+    //    @Test
     public void uniqueValue() {
         Object o = dao.uniqueValue(
                 Restrictions.eq("pkId", 1l),
@@ -89,10 +88,10 @@ public class MemberDaoTest extends BaseTest {
         System.out.println(o);
     }
 
-//    @Test
+    //    @Test
     public void uniqueObject() {
         ProjectionList projectionList = Projections.projectionList();
-        projectionList.add(Projections.property("password"),"password");
+        projectionList.add(Projections.property("password"), "password");
         projectionList.add(Projections.property("phone"));
         Object[] os = dao.uniqueObject(
                 Restrictions.eq("pkId", 1l),
@@ -102,8 +101,7 @@ public class MemberDaoTest extends BaseTest {
     }
 
 
-
-//    @Test
+    //    @Test
     public void listObjects() {
         ProjectionList projectionList = Projections.projectionList();
         projectionList.add(Projections.property("password"));
@@ -116,13 +114,48 @@ public class MemberDaoTest extends BaseTest {
         System.out.println(list);
     }
 
-    @Test
+    //    @Test
     public void uniqueMap() {
         ProjectionList projectionList = Projections.projectionList();
-        projectionList.add(Projections.property("password"),"password2");
-        projectionList.add(Projections.property("phone"),"phone2");
+        projectionList.add(Projections.property("password"), "password2");
+        projectionList.add(Projections.property("phone"), "phone2");
         Map<String, Object> map = dao.uniqueMap(Restrictions.eq("pkId", 1l), projectionList);
         System.out.println(map);
+    }
+
+    //    @Test
+    public void pageObjects() {
+        ProjectionList projectionList = Projections.projectionList();
+        projectionList.add(Projections.property("password"), "password2");
+        projectionList.add(Projections.property("phone"), "phone2");
+        Page<Object[]> page = dao.pageObjects(
+                CriteriaParams
+                        .Add(Restrictions.eq("password", "123123"))
+                        .addProjection(Projections.property("phone"), Projections.property("password")),
+                PageParams.page(1, 10)
+        );
+        System.out.println(page);
+    }
+
+//    @Test
+    public void listMaps() {
+        List<Map<String, Object>> maps = dao.listMaps(CriteriaParams
+                        .Add(Restrictions.eq("password", "123123"))
+                        .addProjection(Projections.property("password"), "password")
+                        .addProjection(Projections.property("phone"), "phone")
+        );
+        System.out.println(maps);
+    }
+
+    @Test
+    public void pageMaps() {
+        Page<Map<String, Object>> maps = dao.pageMaps(CriteriaParams
+                        .Add(Restrictions.eq("password", "123123"))
+                        .addProjection(Projections.property("password"), "password")
+                        .addProjection(Projections.property("phone"), "phone")
+                , PageParams.page(1, 10)
+        );
+        System.out.println(maps);
     }
 
 

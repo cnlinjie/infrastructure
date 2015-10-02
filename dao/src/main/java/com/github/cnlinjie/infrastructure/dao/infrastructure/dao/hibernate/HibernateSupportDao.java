@@ -3,6 +3,7 @@ package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate;
 import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
 import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
 import com.github.cnlinjie.infrastructure.util.ReflectionUtils;
+import com.github.cnlinjie.infrastructure.util.spring.Assert;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author Linjie
@@ -64,7 +64,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
      * @return {@link org.hibernate.Session}
      */
     public Session getSession() {
-        if (session != null && session.isOpen()) {
+        if (null != session && session.isOpen()) {
             return session;
         }
         if (useCurrentSession) {
@@ -98,6 +98,15 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return criteria;
     }
 
+    protected Long getCountRow(CriteriaParams params) {
+        Object total = createCriteria(
+                CriteriaParams
+                        .Add(params.getCriterions().toArray(new Criterion[]{}))
+                        .addProjection(Projections.rowCount()))
+                .uniqueResult();
+        return (Long) total;
+    }
+
 
     @Override
     public T unique(Criterion criterion) {
@@ -107,14 +116,12 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     @Override
     public List<T> list(Criterion criterion) {
-        Criteria criteria = createCriteria(CriteriaParams.Add(criterion));
-        return criteria.list();
+        return list(CriteriaParams.Add(criterion));
     }
 
     @Override
     public List<T> list(Criterion criterion, Order order) {
-        Criteria criteria = createCriteria(CriteriaParams.Add(criterion).addOrder(order));
-        return criteria.list();
+        return list(CriteriaParams.Add(criterion).addOrder(order));
     }
 
     @Override
@@ -124,42 +131,16 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     @Override
     public Page<T> page(Criterion criterion, PageParams pageParams) {
-        Criteria criteria =
-                createCriteria(CriteriaParams.Add(criterion))
-                        .setFirstResult(pageParams.getStartRowByInt())
-                        .setMaxResults(pageParams.getPageSize());
-
-        Object total = createCriteria(
-                CriteriaParams
-                        .Add(criterion)
-                        .addProjection(Projections.rowCount()))
-                .uniqueResult();
-
-        List<T> list = criteria.list();
-        Page<T> page = new Page<T>(list, (Long) total, pageParams.getPageIndex(), pageParams.getPageSize());
-        return page;
+        return page(CriteriaParams.Add(criterion), pageParams);
     }
 
     @Override
     public Page<T> page(Criterion criterion, PageParams pageParams, Order order) {
-        Criteria criteria =
-                createCriteria(CriteriaParams
-                                .Add(criterion)
-                                .addOrder(order)
-                )
-                        .setFirstResult(pageParams.getStartRowByInt())
-                        .setMaxResults(pageParams.getPageSize());
-
-        Object total = createCriteria(
+        return page(
                 CriteriaParams
                         .Add(criterion)
-                        .addProjection(Projections.rowCount()))
-                .uniqueResult();
-
-        List<T> list = criteria.list();
-
-        Page<T> page = new Page<T>(list, (Long) total, pageParams.getPageIndex(), pageParams.getPageSize());
-        return page;
+                        .addOrder(order),
+                pageParams);
     }
 
     @Override
@@ -169,29 +150,15 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                 createCriteria(params)
                         .setFirstResult(pageParams.getStartRowByInt())
                         .setMaxResults(pageParams.getPageSize());
-
-        Object total = createCriteria(
-                CriteriaParams
-                        .Add(params.getCriterions().toArray(new Criterion[]{}))
-                        .addProjection(Projections.rowCount()))
-                .uniqueResult();
-
+        Long total = getCountRow(params);
         List<T> list = criteria.list();
-
-        Page<T> page = new Page<T>(list, (Long) total, pageParams.getPageIndex(), pageParams.getPageSize());
+        Page<T> page = new Page<T>(list, total, pageParams.getPageIndex(), pageParams.getPageSize());
         return page;
     }
 
     @Override
     public Page<T> page(PageParams pageParams) {
-        Criteria criteria =
-                createCriteria(CriteriaParams.get())
-                        .setFirstResult(pageParams.getStartRowByInt())
-                        .setMaxResults(pageParams.getPageSize());
-        Object total = createCriteria(CriteriaParams.get().addProjection(Projections.rowCount())).uniqueResult();
-        List<T> list = criteria.list();
-        Page<T> page = new Page<T>(list, (Long) total, pageParams.getPageIndex(), pageParams.getPageSize());
-        return page;
+        return page(CriteriaParams.get(), pageParams);
     }
 
     @Override
@@ -220,28 +187,17 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     @Override
     public List<Object[]> listObjects(Criterion criterion, Projection projection) {
 
-        Criteria criteria = createCriteria(
-                CriteriaParams
-                        .Add(criterion)
-                        .addProjection(projection)
-
-        );
-        List<Object[]> list = criteria.list();
-        return list;
+        return listObjects(CriteriaParams
+                .Add(criterion)
+                .addProjection(projection));
     }
 
     @Override
     public List<Object[]> listObjects(Criterion criterion, Projection projection, Order order) {
-
-        Criteria criteria = createCriteria(
-                CriteriaParams
-                        .Add(criterion)
-                        .addProjection(projection)
-                        .addOrder(order)
-
-        );
-        List<Object[]> list = criteria.list();
-        return list;
+        return listObjects(CriteriaParams
+                .Add(criterion)
+                .addProjection(projection)
+                .addOrder(order));
     }
 
     @Override
@@ -252,56 +208,100 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     @Override
-    public List<Object[]> pageObjects(Criterion criterion, Projection projection, PageParams pageParams) {
-        return null;
+    public Page<Object[]> pageObjects(Criterion criterion, Projection projection, PageParams pageParams) {
+        return pageObjects(
+                CriteriaParams
+                        .Add(criterion)
+                        .addProjection(projection)
+                , pageParams
+        );
     }
 
     @Override
-    public List<Object[]> pageObjects(Criterion criterion, Projection projection, Order order, PageParams pageParams) {
-        return null;
+    public Page<Object[]> pageObjects(Criterion criterion, Projection projection, Order order, PageParams pageParams) {
+
+        return pageObjects(
+                CriteriaParams
+                        .Add(criterion)
+                        .addProjection(projection)
+                        .addOrder(order)
+                , pageParams
+        );
     }
 
     @Override
-    public List<Object[]> pageObjects(CriteriaParams params, PageParams pageParams) {
-        return null;
+    public Page<Object[]> pageObjects(CriteriaParams params, PageParams pageParams) {
+        Criteria criteria = createCriteria(params)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize());
+        Long total = getCountRow(params);
+        List<Object[]> list = criteria.list();
+        Page<Object[]> page = new Page<Object[]>(list, total, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
     }
 
     @Override
     public Map<String, Object> uniqueMap(Criterion criterion, Projection projection) {
         Object[] os = uniqueObject(criterion, projection);
-        String[] aliases = projection.getAliases();
-        System.out.println(aliases.length);
         return QueryUtil.arrayToMap(os, projection.getAliases());
     }
 
     @Override
     public List<Map<String, Object>> listMaps(Criterion criterion, Projection projection) {
-        return null;
+        return listMaps(
+                CriteriaParams
+                        .Add(criterion)
+                        .addProjection(projection));
     }
 
     @Override
     public List<Map<String, Object>> listMaps(Criterion criterion, Projection projection, Order order) {
-        return null;
+        return listMaps(
+                CriteriaParams
+                        .Add(criterion)
+                        .addProjection(projection)
+                        .addOrder(order));
     }
 
     @Override
     public List<Map<String, Object>> listMaps(CriteriaParams params) {
-        return null;
+        List<Object[]> list = createCriteria(params).list();
+        String[] fieldNames = params.getProjection().getAliases();
+        List<Map<String, Object>> maps = QueryUtil.arraysToMaps(list, fieldNames);
+        return maps;
     }
 
     @Override
     public Page<Map<String, Object>> pageMaps(Criterion criterion, Projection projection, PageParams pageParams) {
-        return null;
+        return pageMaps(CriteriaParams
+                        .Add(criterion)
+                        .addProjection(projection),
+                pageParams);
     }
 
     @Override
     public Page<Map<String, Object>> pageMaps(Criterion criterion, Projection projection, Order order, PageParams pageParams) {
-        return null;
+
+        return pageMaps(CriteriaParams
+                        .Add(criterion)
+                        .addProjection(projection)
+                        .addOrder(order),
+                pageParams);
     }
 
     @Override
     public Page<Map<String, Object>> pageMaps(CriteriaParams params, PageParams pageParams) {
-        return null;
+        List<Object[]> list =
+                createCriteria(params)
+                        .setFirstResult(pageParams.getStartRowByInt())
+                        .setMaxResults(pageParams.getPageSize())
+                        .list();
+        Long total = getCountRow(params);
+        Assert.notNull(params.getProjection(), "需要指定投影的列名");
+        String[] fieldNames = params.getProjection().getAliases();
+        List<Map<String, Object>> maps = QueryUtil.arraysToMaps(list, fieldNames);
+        Page<Map<String, Object>> page = new Page<Map<String, Object>>(maps, total, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
     }
 
     @Override

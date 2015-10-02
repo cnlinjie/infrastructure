@@ -49,6 +49,11 @@ public class CriteriaParams {
         return this;
     }
 
+    public CriteriaParams addProjection(Projection p, String alias) {
+        this.projectionList.add( Projections.alias( p, alias ) );
+        this.projection = projectionList;
+        return this;
+    }
 
     public static CriteriaParams Add(Criterion... cs) {
         return get().add(cs);
@@ -56,6 +61,10 @@ public class CriteriaParams {
 
     public static  CriteriaParams AddProjection(Projection... p) {
         return get().addProjection(p);
+    }
+
+    public static  CriteriaParams AddProjection(Projection p, String alias) {
+        return get().addProjection(p,alias);
     }
 
     public static CriteriaParams AddOrder(Order... os) {

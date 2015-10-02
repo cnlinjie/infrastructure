@@ -78,9 +78,9 @@ public interface IHibernateCriteriaDao<T, PK extends Serializable> {
      * @param pageParams 分页参数
      * @return
      */
-    public List<Object[]> pageObjects(Criterion criterion,Projection projection,PageParams pageParams);
-    public List<Object[]> pageObjects(Criterion criterion,Projection projection,Order order,PageParams pageParams);
-    public List<Object[]> pageObjects(CriteriaParams params,PageParams pageParams);
+    public Page<Object[]> pageObjects(Criterion criterion,Projection projection,PageParams pageParams);
+    public Page<Object[]> pageObjects(Criterion criterion,Projection projection,Order order,PageParams pageParams);
+    public Page<Object[]> pageObjects(CriteriaParams params,PageParams pageParams);
 
 
     /**
