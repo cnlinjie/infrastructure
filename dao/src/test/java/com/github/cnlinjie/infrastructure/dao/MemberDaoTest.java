@@ -114,12 +114,18 @@ public class MemberDaoTest extends BaseTest {
         System.out.println(list);
     }
 
-    //    @Test
+    @Test
     public void uniqueMap() {
         ProjectionList projectionList = Projections.projectionList();
         projectionList.add(Projections.property("password"), "password2");
         projectionList.add(Projections.property("phone"), "phone2");
         Map<String, Object> map = dao.uniqueMap(Restrictions.eq("pkId", 1l), projectionList);
+        Map<String, Object> map2 = dao.uniqueMap(
+                CriteriaParams
+                        .Add(Restrictions.eq("pkId", 1))
+                        .addProjection(Projections.property("password"), "password2")
+                        .addProjection(Projections.property("phone"), "phone2")
+        );
         System.out.println(map);
     }
 
@@ -137,7 +143,7 @@ public class MemberDaoTest extends BaseTest {
         System.out.println(page);
     }
 
-//    @Test
+    //    @Test
     public void listMaps() {
         List<Map<String, Object>> maps = dao.listMaps(CriteriaParams
                         .Add(Restrictions.eq("password", "123123"))
@@ -147,7 +153,7 @@ public class MemberDaoTest extends BaseTest {
         System.out.println(maps);
     }
 
-    @Test
+    //    @Test
     public void pageMaps() {
         Page<Map<String, Object>> maps = dao.pageMaps(CriteriaParams
                         .Add(Restrictions.eq("password", "123123"))

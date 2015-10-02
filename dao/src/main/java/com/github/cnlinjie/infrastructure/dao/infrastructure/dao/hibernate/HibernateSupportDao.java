@@ -4,17 +4,24 @@ import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
 import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
 import com.github.cnlinjie.infrastructure.util.ReflectionUtils;
 import com.github.cnlinjie.infrastructure.util.spring.Assert;
+import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
+import org.hibernate.internal.AbstractQueryImpl;
+import org.hibernate.transform.ResultTransformer;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.xml.transform.Transformer;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +133,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     @Override
     public List<T> list(CriteriaParams params) {
+        Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
         return createCriteria(params).list();
     }
 
@@ -145,7 +153,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     @Override
     public Page<T> page(CriteriaParams params, PageParams pageParams) {
-
+        Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
         Criteria criteria =
                 createCriteria(params)
                         .setFirstResult(pageParams.getStartRowByInt())
@@ -180,8 +188,11 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                         .addProjection(projection)
 
         );
-        Object[] o = (Object[]) criteria.list().get(0);
-        return o;
+        List list = criteria.list();
+        if (list.size() > 0) {
+            return (Object[]) list.get(0);
+        }
+        return null;
     }
 
     @Override
@@ -242,8 +253,15 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     @Override
     public Map<String, Object> uniqueMap(Criterion criterion, Projection projection) {
-        Object[] os = uniqueObject(criterion, projection);
-        return QueryUtil.arrayToMap(os, projection.getAliases());
+        return uniqueMap(CriteriaParams.Add(criterion).addProjection(projection));
+    }
+
+    @Override
+    public Map<String, Object> uniqueMap(CriteriaParams params) {
+        Map<String, Object> map = (Map<String, Object>) createCriteria(params)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .uniqueResult();
+        return map;
     }
 
     @Override
@@ -265,9 +283,10 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     @Override
     public List<Map<String, Object>> listMaps(CriteriaParams params) {
-        List<Object[]> list = createCriteria(params).list();
-        String[] fieldNames = params.getProjection().getAliases();
-        List<Map<String, Object>> maps = QueryUtil.arraysToMaps(list, fieldNames);
+        Assert.notNull(params.getProjection(), "需要指定投影的列名");
+        List<Map<String, Object>> maps = createCriteria(params)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
         return maps;
     }
 
@@ -291,6 +310,18 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     @Override
     public Page<Map<String, Object>> pageMaps(CriteriaParams params, PageParams pageParams) {
+        Assert.notNull(params.getProjection(), "需要指定投影的列名");
+        List<Map<String, Object>> maps =
+                createCriteria(params)
+                        .setFirstResult(pageParams.getStartRowByInt())
+                        .setMaxResults(pageParams.getPageSize())
+                        .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                        .list();
+        Long total = getCountRow(params);
+        Page<Map<String, Object>> page = new Page<Map<String, Object>>(maps, total, pageParams.getPageIndex(), pageParams.getPageSize());
+
+/*
+       // 自己实现的方式
         List<Object[]> list =
                 createCriteria(params)
                         .setFirstResult(pageParams.getStartRowByInt())
@@ -301,106 +332,235 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         String[] fieldNames = params.getProjection().getAliases();
         List<Map<String, Object>> maps = QueryUtil.arraysToMaps(list, fieldNames);
         Page<Map<String, Object>> page = new Page<Map<String, Object>>(maps, total, pageParams.getPageIndex(), pageParams.getPageSize());
+*/
         return page;
+    }
+
+
+    /**
+     * 设置查询参数
+     *
+     * @param query
+     * @param values
+     */
+    protected Query setParameters(Query query, Object... values) {
+        if (ArrayUtils.isEmpty(values)) {
+            return query;
+        }
+        AbstractQueryImpl impl = (AbstractQueryImpl) query;
+        String[] params = impl.getNamedParameters();
+
+        int methodParameterPosition = params.length - 1;
+
+        if (impl.hasNamedParameters()) {
+            for (String p : params) {
+                Object o = values[methodParameterPosition--];
+                query.setParameter(p, o);
+            }
+        } else {
+            for (Integer i = 0; i < values.length; i++) {
+                query.setParameter(i, values[i]);
+            }
+        }
+        return query;
+    }
+
+    protected Query createQuery(String hql) {
+        return this.getSession().createQuery(hql);
+    }
+
+
+    protected Long getCountRow(String hql, Object... args) {
+        Long o = (Long) setParameters(createQuery(getTotalHql(hql)), args).uniqueResult();
+        return o;
+    }
+
+    protected Long getCountRow(String hql, Map<String, Object> args) {
+        Long o = (Long) createQuery(getTotalHql(hql)).setProperties(args).uniqueResult();
+        return o;
+    }
+
+    protected String getTotalHql(String hql) {
+        String countSql = "select count(*) ";
+        String upperSql = hql.toUpperCase();
+        int start = upperSql.indexOf("FROM");
+        int end = hql.length();
+        countSql += hql.substring(start, end);
+        logger.info(countSql);
+        return countSql;
     }
 
     @Override
     public T unique(String hql, Object... args) {
-        return null;
+        T t = (T) setParameters(createQuery(hql), args)
+                .uniqueResult();
+        return t;
     }
 
     @Override
     public T unique(String hql, Map<String, Object> args) {
-        return null;
+        T t = (T) createQuery(hql)
+                .setProperties(args)
+                .uniqueResult();
+        return t;
     }
 
     @Override
     public List<T> list(String hql, Object... args) {
-        return null;
+        List list = setParameters(createQuery(hql), args).list();
+        return list;
     }
 
     @Override
     public List<T> list(String hql, Map<String, Object> args) {
-        return null;
+        List list = createQuery(hql).setProperties(args).list();
+        return list;
     }
 
     @Override
     public Page<T> page(String hql, PageParams pageParams, Object... args) {
-        return null;
+        List list = setParameters(createQuery(hql), args)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize())
+                .list();
+        Long totalCount = getCountRow(hql, args);
+        Page<T> page = new Page<T>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
     }
 
     @Override
     public Page<T> page(String hql, PageParams pageParams, Map<String, Object> args) {
-        return null;
+        List list = createQuery(hql)
+                .setProperties(args)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize())
+                .list();
+        Long totalCount = getCountRow(hql, args);
+        Page<T> page = new Page<T>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
     }
 
     @Override
-    public Object uniqueValue(String hql, Object... args) {
-        return null;
+    public <X> X uniqueValue(String hql, Object... args) {
+        return (X) setParameters(createQuery(hql), args).uniqueResult();
     }
 
     @Override
-    public Object uniqueValue(String hql, Map<String, Object> args) {
-        return null;
+    public <X> X uniqueValue(String hql, Map<String, Object> args) {
+        return (X) createQuery(hql).setProperties(args).uniqueResult();
     }
 
     @Override
     public Object[] uniqueObject(String hql, Object... args) {
-        return new Object[0];
+        List<Object[]> list = listObjects(hql, args);
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override
     public Object[] uniqueObject(String hql, Map<String, Object> args) {
-        return new Object[0];
+        List<Object[]> list = listObjects(hql, args);
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override
     public List<Object[]> listObjects(String hql, Object... args) {
-        return null;
+        List list = setParameters(createQuery(hql), args).list();
+        return list;
     }
 
     @Override
     public List<Object[]> listObjects(String hql, Map<String, Object> args) {
-        return null;
+        List list = createQuery(hql).setProperties(args).list();
+        return list;
     }
 
     @Override
     public Page<Object[]> pageObjects(String hql, PageParams pageParams, Object... args) {
-        return null;
+        List<Object[]> list = setParameters(createQuery(hql), args)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize())
+                .list();
+        Long totalCount = getCountRow(hql, args);
+        Page<Object[]> page = new Page<Object[]>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
     }
 
     @Override
     public Page<Object[]> pageObjects(String hql, PageParams pageParams, Map<String, Object> args) {
-        return null;
+        List<Object[]> list = createQuery(hql)
+                .setProperties(args)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize())
+                .list();
+        Long totalCount = getCountRow(hql, args);
+        Page<Object[]> page = new Page<Object[]>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
     }
 
     @Override
     public Map<String, Object> uniqueMap(String hql, Object... args) {
-        return null;
+        Map<String, Object> map = (Map<String, Object>)
+                setParameters(createQuery(hql), args)
+                        .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                        .uniqueResult();
+        return map;
     }
 
     @Override
     public Map<String, Object> uniqueMap(String hql, Map<String, Object> args) {
-        return null;
+        Map<String, Object> map = (Map<String, Object>)
+                createQuery(hql).setProperties(args)
+                        .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                        .uniqueResult();
+        return map;
     }
 
     @Override
     public List<Map<String, Object>> listMaps(String hql, Object... args) {
-        return null;
+        List<Map<String, Object>> maps = setParameters(createQuery(hql), args)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+        return maps;
     }
 
     @Override
     public List<Map<String, Object>> listMaps(String hql, Map<String, Object> args) {
-        return null;
+        List<Map<String, Object>> maps = createQuery(hql).setProperties(args)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+        return maps;
+    }
+
+
+    @Override
+    public Page<Map<String, Object>> pageMaps(String hql, PageParams pageParams, Object... args) {
+        List<Map<String, Object>> list = setParameters(createQuery(hql), args)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize())
+                .list();
+        Long totalCount = getCountRow(hql, args);
+        Page<Map<String, Object>> page = new Page<Map<String, Object>>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
     }
 
     @Override
-    public Page<Map<String, Object>> pageMaps(String hql, Object... args) {
-        return null;
-    }
-
-    @Override
-    public Page<Map<String, Object>> pageMaps(String hql, Map<String, Object> args) {
-        return null;
+    public Page<Map<String, Object>> pageMaps(String hql, PageParams pageParams, Map<String, Object> args) {
+        List<Map<String, Object>> list =
+                createQuery(hql)
+                        .setProperties(args)
+                        .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                        .setFirstResult(pageParams.getStartRowByInt())
+                        .setMaxResults(pageParams.getPageSize())
+                        .list();
+        Long totalCount = getCountRow(hql, args);
+        Page<Map<String, Object>> page = new Page<Map<String, Object>>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
     }
 }
