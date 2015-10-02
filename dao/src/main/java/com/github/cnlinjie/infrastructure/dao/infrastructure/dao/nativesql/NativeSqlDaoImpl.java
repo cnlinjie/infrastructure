@@ -2,6 +2,12 @@ package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.nativesql;
 
 import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
 import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
+import com.github.cnlinjie.infrastructure.util.ReflectionUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +17,56 @@ import java.util.Map;
  * @date 2015/10/1.
  */
 public class NativeSqlDaoImpl implements INativeSqlDao {
+
+
+    private boolean useCurrentSession = false;
+
+    protected SessionFactory sessionFactory;
+
+    private Session session;
+
+
+    private static Logger logger = LoggerFactory.getLogger(NativeSqlDaoImpl.class);
+
+    public NativeSqlDaoImpl() {
+    }
+
+    /**
+     * 设置Hibernate sessionFactory
+     *
+     * @param sessionFactory
+     */
+    @Autowired(required = false)
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    /**
+     * 获取Hibernate SessionFactory
+     *
+     * @return {@link org.hibernate.SessionFactory}
+     */
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    /**
+     * 取得当前Session.
+     *
+     * @return {@link org.hibernate.Session}
+     */
+    public Session getSession() {
+        if (null != session && session.isOpen()) {
+            return session;
+        }
+        if (useCurrentSession) {
+            this.session = sessionFactory.getCurrentSession();
+        } else {
+            this.session = sessionFactory.openSession();
+        }
+        return session;
+    }
+
 
     @Override
     public Object sqlUniqueValue(String sql, Object... args) {

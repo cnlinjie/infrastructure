@@ -1,4 +1,4 @@
-package org.linjie.framework.util.security;
+package com.github.cnlinjie.infrastructure.util.security;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
