@@ -25,7 +25,7 @@ import java.util.*;
  */
 public class HttpHelper {
 
-    private int connectionTimeout; // 时间单位：秒
+    private int connectionTimeout = 600000; // 时间单位：秒
 
     private Logger logger = LoggerFactory.getLogger(HttpHelper.class);
 

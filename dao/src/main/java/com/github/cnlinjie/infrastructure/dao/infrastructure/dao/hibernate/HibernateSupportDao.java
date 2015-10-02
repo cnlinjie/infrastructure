@@ -14,14 +14,11 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.internal.AbstractQueryImpl;
-import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.transform.Transformer;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
