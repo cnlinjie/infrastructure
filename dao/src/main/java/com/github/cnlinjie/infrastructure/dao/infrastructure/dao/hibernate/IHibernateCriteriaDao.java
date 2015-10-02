@@ -87,6 +87,11 @@ public interface IHibernateCriteriaDao<T, PK extends Serializable> {
      * 查询单挑记录，以Map的形式返回
      * @param criterion   查询条件
      * @param projection 需要查询的字段
+     *
+     * ProjectionList projectionList = Projections.projectionList();
+     * projectionList.add(Projections.property("password"),"password2");
+     * projectionList.add(Projections.property("phone"),"phone2");
+     * Map<String, Object> map = dao.uniqueMap(Restrictions.eq("pkId", 1), projectionList);
      * @return
      */
     public Map<String,Object> uniqueMap(Criterion criterion,Projection projection);

@@ -63,15 +63,15 @@ public class CriteriaParams {
     }
 
 
-    public List<Criterion> getCriterions() {
+    List<Criterion> getCriterions() {
         return criterions;
     }
 
-    public Projection getProjection() {
+    Projection getProjection() {
         return projection;
     }
 
-    public List<Order> getOrders() {
+    List<Order> getOrders() {
         return orders;
     }
 }

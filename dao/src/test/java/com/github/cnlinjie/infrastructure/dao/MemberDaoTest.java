@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Linjie
@@ -91,9 +92,8 @@ public class MemberDaoTest extends BaseTest {
 //    @Test
     public void uniqueObject() {
         ProjectionList projectionList = Projections.projectionList();
-        projectionList.add(Projections.property("password"));
+        projectionList.add(Projections.property("password"),"password");
         projectionList.add(Projections.property("phone"));
-
         Object[] os = dao.uniqueObject(
                 Restrictions.eq("pkId", 1l),
                 projectionList
@@ -103,7 +103,7 @@ public class MemberDaoTest extends BaseTest {
 
 
 
-    @Test
+//    @Test
     public void listObjects() {
         ProjectionList projectionList = Projections.projectionList();
         projectionList.add(Projections.property("password"));
@@ -114,6 +114,15 @@ public class MemberDaoTest extends BaseTest {
                 projectionList
         );
         System.out.println(list);
+    }
+
+    @Test
+    public void uniqueMap() {
+        ProjectionList projectionList = Projections.projectionList();
+        projectionList.add(Projections.property("password"),"password2");
+        projectionList.add(Projections.property("phone"),"phone2");
+        Map<String, Object> map = dao.uniqueMap(Restrictions.eq("pkId", 1l), projectionList);
+        System.out.println(map);
     }
 
 

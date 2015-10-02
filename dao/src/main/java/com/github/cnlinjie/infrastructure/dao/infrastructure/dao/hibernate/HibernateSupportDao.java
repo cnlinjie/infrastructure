@@ -268,7 +268,10 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     @Override
     public Map<String, Object> uniqueMap(Criterion criterion, Projection projection) {
-        return null;
+        Object[] os = uniqueObject(criterion, projection);
+        String[] aliases = projection.getAliases();
+        System.out.println(aliases.length);
+        return QueryUtil.arrayToMap(os, projection.getAliases());
     }
 
     @Override
