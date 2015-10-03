@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+/**
+ * 验证码生成器
+ *
+ */
 public class VerifyCodeUtils {
 
 	public static String FONT_FAMILY = "Arial Black";
@@ -30,7 +34,7 @@ public class VerifyCodeUtils {
      * @param width 宽度
      * @param height 高度
      * @param num 验证码位数
-     * @return String
+     * @return 返回类型 VerifyImage,包含了验图片流，内容和图片格式等
      */
 	public static VerifyImage getCaptcha(int width, int height, int num) {
 		// 防止非负数

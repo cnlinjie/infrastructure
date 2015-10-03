@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Map帮助类，用于帮助构建Map，流式API
  * Created by tminglei on 5/28/15.
  */
 public class MapUtils {
