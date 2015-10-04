@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD5 {
     public static String encode(String plainText) {
-        org.linjie.framework.util.security.MD5 md5 = new org.linjie.framework.util.security.MD5();
+        MD5 md5 = new MD5();
         return md5.encryption(plainText);
     }
 
@@ -33,7 +33,7 @@ public class MD5 {
     }
 
     public static void main(String[] args) {
-        org.linjie.framework.util.security.MD5 md5 = new org.linjie.framework.util.security.MD5();
+        MD5 md5 = new MD5();
         System.out.println(md5.encryption("admin"));
     }
 }
