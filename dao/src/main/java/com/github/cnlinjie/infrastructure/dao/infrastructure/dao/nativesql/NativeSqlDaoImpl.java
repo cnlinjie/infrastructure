@@ -10,12 +10,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.internal.AbstractQueryImpl;
 import org.hibernate.transform.Transformers;
-import org.linjie.framework.util.MappingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.transform.Transformer;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
