@@ -1,6 +1,7 @@
 package com.github.cnlinjie.infrastructure.dao.infrastructure.dao;
 
 import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate.HibernateSupportDao;
+import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 import java.util.List;
@@ -38,13 +39,18 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
     }
 
     @Override
-    public int executeUpdate(String queryString, Map<String, Object> args) {
-        return 0;
+    public int executeUpdate(String hql, Map<String, Object> args) {
+        int i = createQuery(hql)
+                .setProperties(args)
+                .executeUpdate();
+        return i;
     }
 
     @Override
-    public int executeUpdate(String queryString, Object... args) {
-        return 0;
+    public int executeUpdate(String hql, Object... args) {
+        int i = setParameters(createQuery(hql), args)
+                .executeUpdate();
+        return i;
     }
 
     @Override
@@ -54,12 +60,16 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
 
     @Override
     public T get(PK pk) {
-        return null;
+        T t = (T) this.getSession().get(this.entityClass, pk);
+        return t;
     }
 
     @Override
     public T find(String key, String value) {
-        return null;
+        T unique = this.unique(
+                Restrictions.eq(key, value)
+        );
+        return unique;
     }
 
     @Override

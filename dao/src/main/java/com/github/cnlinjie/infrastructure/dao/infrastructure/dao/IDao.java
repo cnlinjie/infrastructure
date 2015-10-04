@@ -26,11 +26,11 @@ public interface IDao<T ,PK extends Serializable> {
     public void saveOrUpdate(T t);
 
     // 执行语句
-    public int executeUpdate(String queryString, Map<String, Object> args);
+    public int executeUpdate(String hql, Map<String, Object> args);
 
 
     // 执行语句
-    public int executeUpdate(String queryString, Object... args);
+    public int executeUpdate(String hql, Object... args);
 
     // 删除多条
     public int delete(List<PK> ids);
