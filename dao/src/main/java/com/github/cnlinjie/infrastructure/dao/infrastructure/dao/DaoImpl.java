@@ -73,22 +73,16 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
     }
 
     @Override
-    public T find(QueryParams params) {
-        return null;
-    }
-
-    @Override
-    public Page<T> findPage(QueryParams params) {
-        return null;
-    }
-
-    @Override
-    public List<T> findlist(QueryParams params) {
-        return null;
+    public Page<T> findPage(PageParams params) {
+        String hql = " from " + getTableName()  ;
+        Page<T> page = page(hql, params);
+        return page;
     }
 
     @Override
     public List<T> findAll() {
-        return null;
+        String hql = " from " + getTableName()  ;
+        List list = createQuery(hql).list();
+        return list;
     }
 }
