@@ -59,6 +59,9 @@ public interface INativeSqlDao {
     public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams,String[] fields, Object... args);
     public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams,String[] fields,Map<String, Object> args);
 
+    public int sqlExecute(String sql,Object... args);
+    public int sqlExecute(String sql,Map<String, Object> args);
+
 
 
 }

@@ -350,6 +350,18 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
     }
 
 
+    @Override
+    public int sqlExecute(String sql, Object... args) {
+        int i = setParameters(createSQLQuery(sql), args)
+                .executeUpdate();
+        return i;
+    }
 
-
+    @Override
+     public int sqlExecute(String sql, Map<String, Object> args) {
+        int i = createSQLQuery(sql)
+                .setProperties(args)
+                .executeUpdate();
+        return i;
+    }
 }
