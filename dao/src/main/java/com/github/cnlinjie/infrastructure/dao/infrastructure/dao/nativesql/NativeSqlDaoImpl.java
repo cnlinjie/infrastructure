@@ -12,8 +12,8 @@ import org.hibernate.internal.AbstractQueryImpl;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
      *
      * @param sessionFactory
      */
-    @Autowired(required = false)
+    @Inject
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
