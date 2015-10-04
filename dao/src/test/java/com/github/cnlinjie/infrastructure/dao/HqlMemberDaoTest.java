@@ -1,5 +1,6 @@
 package com.github.cnlinjie.infrastructure.dao;
 
+import com.github.cnlinjie.infrastructure.dao.bean.MemberBean;
 import com.github.cnlinjie.infrastructure.dao.entity.Member;
 import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
 import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
@@ -126,7 +127,7 @@ public class HqlMemberDaoTest extends BaseTest {
     }
 
 
-    @Test
+//    @Test
     public void pageMaps() {
         String hql = "select phone as phone2,password  as password2 from Member where phone = :phone";
         Page<Map<String, Object>> mapPage = dao.pageMaps(hql, PageParams.page(1, 18), "111");
@@ -135,6 +136,23 @@ public class HqlMemberDaoTest extends BaseTest {
         System.out.println(mapPage);
         System.out.println(mapPage2);
     }
+
+
+//    @Test
+    public void uniqueBean() {
+        String hql = "select m.phone as phone ,m.password as password  from Member m where m.pkId = :pkId";
+        MemberBean memberBean = dao.uniqueBean(hql, MemberBean.class, 1l);
+        System.out.println(memberBean);
+
+    }
+    @Test
+    public void pageBeans() {
+        String hql = "select phone as phone,password as password from Member where phone = :phone";
+        Page<MemberBean> page = dao.pageBeans(hql, MemberBean.class, PageParams.page(1, 3), "222");
+        System.out.println(page);
+
+    }
+
 
 
 

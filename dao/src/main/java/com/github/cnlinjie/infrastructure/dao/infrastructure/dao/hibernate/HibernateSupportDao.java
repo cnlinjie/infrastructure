@@ -378,13 +378,13 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     protected String getTotalHql(String hql) {
-        String countSql = "select count(*) ";
-        String upperSql = hql.toUpperCase();
-        int start = upperSql.indexOf("FROM");
+        String counthql = "select count(*) ";
+        String upperhql = hql.toUpperCase();
+        int start = upperhql.indexOf("FROM");
         int end = hql.length();
-        countSql += hql.substring(start, end);
-        logger.info(countSql);
-        return countSql;
+        counthql += hql.substring(start, end);
+        logger.info(counthql);
+        return counthql;
     }
 
     @Override
@@ -558,6 +558,67 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                         .list();
         Long totalCount = getCountRow(hql, args);
         Page<Map<String, Object>> page = new Page<Map<String, Object>>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
+    }
+
+
+    @Override
+    public <X> X uniqueBean(String hql, Class<? extends X> transferClass, Object... args) {
+        X x = (X) setParameters(createQuery(hql), args)
+                .setResultTransformer(Transformers.aliasToBean(transferClass))
+                .uniqueResult();
+        return x;
+    }
+
+    @Override
+    public <X> X uniqueBean(String hql, Class<? extends X> transferClass, Map<String, Object> args) {
+        X x = (X) createQuery(hql)
+                .setProperties(args)
+                .setResultTransformer(Transformers.aliasToBean(transferClass))
+                .uniqueResult();
+        return x;
+    }
+
+    @Override
+    public <X> List<X> listBeans(String hql, Class<? extends X> transferClass, Object... args) {
+        List<X> list = setParameters(createQuery(hql), args)
+                .setResultTransformer(Transformers.aliasToBean(transferClass))
+                .list();
+        return list;
+    }
+
+    @Override
+    public <X> List<X> listBeans(String hql, Class<? extends X> transferClass, Map<String, Object> args) {
+        List<X> list = createQuery(hql).setProperties(args)
+                .setResultTransformer(Transformers.aliasToBean(transferClass))
+                .list();
+        return list;
+    }
+
+    @Override
+    public <X> Page<X> pageBeans(String hql, Class<? extends X> transferClass, PageParams pageParams, Object... args) {
+        List<X> list = setParameters(createQuery(hql), args)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize())
+                .setResultTransformer(Transformers.aliasToBean(transferClass))
+                .list();
+
+        Long totalCount = getCountRow(hql, args);
+        Page<X> page = new Page<X>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        return page;
+    }
+
+    @Override
+    public <X> Page<X> pageBeans(String hql, Class<? extends X> transferClass, PageParams pageParams, Map<String, Object> args) {
+        List<X> list =
+                createQuery(hql)
+                        .setResultTransformer(Transformers.aliasToBean(transferClass))
+                        .setFirstResult(pageParams.getStartRowByInt())
+                        .setMaxResults(pageParams.getPageSize())
+                        .setProperties(args)
+                        .list();
+        Long totalCount = getCountRow(hql, args);
+        Page<X> page = new Page<X>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
         return page;
     }
 }

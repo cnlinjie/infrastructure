@@ -36,9 +36,11 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
     public Object[] uniqueObject(String hql, Map<String, Object> args);
 
 
+
     public List<Object[]> listObjects(String hql, Object... args);
 
     public List<Object[]> listObjects(String hql, Map<String, Object> args);
+
 
 
     public Page<Object[]> pageObjects(String hql, PageParams pageParams, Object... args);
@@ -107,6 +109,26 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
      * @return
      */
     public Page<Map<String, Object>> pageMaps(String hql, PageParams pageParams,  Map<String, Object> args);
+
+
+    /**
+     * HQL的 Bean 查询需要 as , as ，如<br/>
+     * select phone as phone,password as password from Member where phone = :phone
+     * @param hql
+     * @param transferClass
+     * @param args
+     * @param <X>
+     * @return
+     */
+    public <X> X uniqueBean(String hql,Class<? extends X> transferClass,Object... args);
+    public <X> X uniqueBean(String hql,Class<? extends X> transferClass,Map<String,Object> args);
+
+    public <X> List<X>  listBeans(String hql,Class<? extends X> transferClass,Object... args);
+    public <X> List<X>  listBeans(String hql,Class<? extends X> transferClass,Map<String,Object> args);
+
+    public <X> Page<X>  pageBeans(String hql,Class<? extends X> transferClass,PageParams pageParams,Object... args);
+    public <X> Page<X>  pageBeans(String hql,Class<? extends X> transferClass,PageParams pageParams,Map<String,Object> args);
+
 
 
 }
