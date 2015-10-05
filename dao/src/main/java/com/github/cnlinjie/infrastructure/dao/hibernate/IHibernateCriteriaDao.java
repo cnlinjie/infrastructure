@@ -1,7 +1,7 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate;
+package com.github.cnlinjie.infrastructure.dao.hibernate;
 
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
+import com.github.cnlinjie.infrastructure.dao.PageParams;
+import com.github.cnlinjie.infrastructure.dao.Page;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;

@@ -1,7 +1,6 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao;
+package com.github.cnlinjie.infrastructure.dao;
 
 import com.github.cnlinjie.infrastructure.util.spring.Assert;
-import org.apache.commons.lang3.Validate;
 
 /**
  * @author Linjie

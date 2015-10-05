@@ -1,6 +1,6 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate;
+package com.github.cnlinjie.infrastructure.dao.hibernate;
 
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.IDao;
+import com.github.cnlinjie.infrastructure.dao.IDao;
 
 import java.io.Serializable;
 

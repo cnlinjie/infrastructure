@@ -1,6 +1,6 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao;
+package com.github.cnlinjie.infrastructure.dao;
 
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate.HibernateSupportDao;
+import com.github.cnlinjie.infrastructure.dao.hibernate.HibernateSupportDao;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;

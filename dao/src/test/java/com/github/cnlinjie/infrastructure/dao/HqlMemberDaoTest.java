@@ -2,15 +2,8 @@ package com.github.cnlinjie.infrastructure.dao;
 
 import com.github.cnlinjie.infrastructure.dao.bean.MemberBean;
 import com.github.cnlinjie.infrastructure.dao.entity.Member;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate.CriteriaParams;
 import com.github.cnlinjie.infrastructure.util.MapUtils;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

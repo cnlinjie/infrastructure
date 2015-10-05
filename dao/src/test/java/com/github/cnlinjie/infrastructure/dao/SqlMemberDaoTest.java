@@ -1,9 +1,7 @@
 package com.github.cnlinjie.infrastructure.dao;
 
 import com.github.cnlinjie.infrastructure.dao.bean.MemberBean;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.nativesql.NativeSqlDaoImpl;
+import com.github.cnlinjie.infrastructure.dao.nativesql.NativeSqlDaoImpl;
 import com.github.cnlinjie.infrastructure.util.MapUtils;
 import org.hibernate.Transaction;
 import org.junit.After;

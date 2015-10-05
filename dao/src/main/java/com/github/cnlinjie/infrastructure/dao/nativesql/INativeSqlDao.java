@@ -1,7 +1,7 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.nativesql;
+package com.github.cnlinjie.infrastructure.dao.nativesql;
 
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
+import com.github.cnlinjie.infrastructure.dao.PageParams;
+import com.github.cnlinjie.infrastructure.dao.Page;
 
 import java.util.List;
 import java.util.Map;

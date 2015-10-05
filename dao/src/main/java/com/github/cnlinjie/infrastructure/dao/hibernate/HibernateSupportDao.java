@@ -1,7 +1,7 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate;
+package com.github.cnlinjie.infrastructure.dao.hibernate;
 
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
+import com.github.cnlinjie.infrastructure.dao.PageParams;
+import com.github.cnlinjie.infrastructure.dao.Page;
 import com.github.cnlinjie.infrastructure.util.ReflectionUtils;
 import com.github.cnlinjie.infrastructure.util.spring.Assert;
 import org.apache.commons.lang3.ArrayUtils;

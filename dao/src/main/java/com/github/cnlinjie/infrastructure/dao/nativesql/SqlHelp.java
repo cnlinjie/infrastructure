@@ -1,4 +1,4 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.nativesql;
+package com.github.cnlinjie.infrastructure.dao.nativesql;
 
 /**
  * @author Linjie

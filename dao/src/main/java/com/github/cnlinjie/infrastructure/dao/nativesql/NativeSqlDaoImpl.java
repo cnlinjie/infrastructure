@@ -1,8 +1,8 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.nativesql;
+package com.github.cnlinjie.infrastructure.dao.nativesql;
 
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.Page;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.PageParams;
-import com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate.QueryUtil;
+import com.github.cnlinjie.infrastructure.dao.Page;
+import com.github.cnlinjie.infrastructure.dao.PageParams;
+import com.github.cnlinjie.infrastructure.dao.hibernate.QueryUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;

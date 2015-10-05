@@ -1,4 +1,4 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao;
+package com.github.cnlinjie.infrastructure.dao;
 
 import java.util.List;
 

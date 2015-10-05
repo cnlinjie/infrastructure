@@ -1,4 +1,4 @@
-package com.github.cnlinjie.infrastructure.dao.infrastructure.dao.hibernate;
+package com.github.cnlinjie.infrastructure.dao.hibernate;
 
 import org.hibernate.criterion.*;
 
