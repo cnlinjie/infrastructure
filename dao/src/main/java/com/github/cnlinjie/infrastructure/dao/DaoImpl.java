@@ -67,7 +67,11 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
 
     @Override
     public int delete(List<PK> ids) {
-        return 0;
+        String hql  = " delete from " + getTableName() + " t where t.id in (:ids)";
+        int i = createQuery(hql)
+                .setParameterList("ids", ids)
+                .executeUpdate();
+        return i;
     }
 
     @Override
