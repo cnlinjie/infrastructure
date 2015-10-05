@@ -42,7 +42,6 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
      *
      * @param sessionFactory
      */
-    @Inject
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

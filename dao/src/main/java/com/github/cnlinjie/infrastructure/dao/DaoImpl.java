@@ -1,6 +1,9 @@
 package com.github.cnlinjie.infrastructure.dao;
 
 import com.github.cnlinjie.infrastructure.dao.hibernate.HibernateSupportDao;
+import com.github.cnlinjie.infrastructure.dao.nativesql.INativeSqlDao;
+import com.github.cnlinjie.infrastructure.dao.nativesql.NativeSqlDaoImpl;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
@@ -11,7 +14,16 @@ import java.util.Map;
  * @author Linjie
  * @date 2015/10/1.
  */
-public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK> implements IDao<T,PK> {
+public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK> implements IDao<T,PK> , INativeSqlDao {
+
+
+    private NativeSqlDaoImpl sqlDao = new NativeSqlDaoImpl();
+
+    @Override
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        sqlDao.setSessionFactory(sessionFactory);
+        super.setSessionFactory(sessionFactory);
+    }
 
     @Override
     public void save(T t) {
@@ -84,5 +96,126 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
         String hql = " from " + getTableName()  ;
         List list = createQuery(hql).list();
         return list;
+    }
+
+
+    @Override
+    public <X> X sqlUniqueValue(String sql, Object... args) {
+        return sqlDao.sqlUniqueValue(sql, args);
+    }
+
+    @Override
+    public <X> X sqlUniqueValue(String sql, Map<String, Object> args) {
+        return sqlDao.sqlUniqueValue(sql, args);
+    }
+
+    @Override
+    public Object[] sqlUniqueObject(String sql, Object... args) {
+        return sqlDao.sqlUniqueObject(sql, args);
+    }
+
+    @Override
+    public Object[] sqlUniqueObject(String sql, Map<String, Object> args) {
+        return sqlDao.sqlUniqueObject(sql, args);
+    }
+
+    @Override
+    public <X> X sqlUniqueBean(String sql, Class<? extends X> transferClass, Object... args) {
+        return sqlDao.sqlUniqueBean(sql, transferClass, args);
+    }
+
+    @Override
+    public <X> X sqlUniqueBean(String sql, Class<? extends X> transferClass, Map<String, Object> args) {
+        return sqlDao.sqlUniqueBean(sql,transferClass,args);
+    }
+
+    @Override
+    public List<Object[]> sqlListObjects(String sql, Object... args) {
+        return sqlDao.sqlListObjects(sql,args);
+    }
+
+    @Override
+    public List<Object[]> sqlListObjects(String sql, Map<String, Object> args) {
+        return sqlDao.sqlListObjects(sql,args);
+    }
+
+    @Override
+    public Page<Object[]> sqlPageObjects(String sql, PageParams pageParams, Object... args) {
+        return  sqlDao.sqlPageObjects(sql, pageParams, args);
+    }
+
+    @Override
+    public Page<Object[]> sqlPageObjects(String sql, PageParams pageParams, Map<String, Object> args) {
+        return sqlDao.sqlPageObjects(sql,pageParams,args);
+    }
+
+    @Override
+    public <X> List<X> sqlListBeans(String sql, Class<? extends X> transferClass, Object... args) {
+        return sqlDao.sqlListBeans(sql, transferClass, args);
+    }
+
+    @Override
+    public <X> List<X> sqlListBeans(String sql, Class<? extends X> transferClass, Map<String, Object> args) {
+        return sqlDao.sqlListBeans(sql,transferClass,args);
+    }
+
+    @Override
+    public <X> Page<X> sqlPageBeans(String sql, Class<? extends X> transferClass, PageParams pageParams, Object... args) {
+        return sqlDao.sqlPageBeans(sql, transferClass, pageParams, args);
+    }
+
+    @Override
+    public <X> Page<X> sqlPageBeans(String sql, Class<? extends X> transferClass, PageParams pageParams, Map<String, Object> args) {
+        return sqlDao.sqlPageBeans(sql,transferClass,pageParams,args);
+    }
+
+    @Override
+    public List<Map<String, Object>> sqlListMaps(String sql, Object... args) {
+        return  sqlDao.sqlListMaps(sql,args);
+    }
+
+    @Override
+    public List<Map<String, Object>> sqlListMaps(String sql, Map<String, Object> args) {
+        return sqlDao.sqlListMaps(sql,args);
+    }
+
+    @Override
+    public List<Map<String, Object>> sqlListMaps(String sql, String[] fields, Object... args) {
+        return sqlDao.sqlListMaps(sql,fields,args);
+    }
+
+    @Override
+    public List<Map<String, Object>> sqlListMaps(String sql, String[] fields, Map<String, Object> args) {
+        return sqlDao.sqlListMaps(sql,fields,args);
+    }
+
+    @Override
+    public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams, Object... args) {
+        return sqlDao.sqlPageMaps(sql, pageParams, args);
+    }
+
+    @Override
+    public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams, Map<String, Object> args) {
+        return sqlDao.sqlPageMaps(sql, pageParams,args);
+    }
+
+    @Override
+    public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams, String[] fields, Object... args) {
+        return sqlDao.sqlPageMaps(sql, pageParams,fields,args);
+    }
+
+    @Override
+    public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams, String[] fields, Map<String, Object> args) {
+        return sqlDao.sqlPageMaps(sql, pageParams,fields,args);
+    }
+
+    @Override
+    public int sqlExecute(String sql, Object... args) {
+        return sqlDao.sqlExecute(sql,args);
+    }
+
+    @Override
+    public int sqlExecute(String sql, Map<String, Object> args) {
+        return sqlDao.sqlExecute(sql,args);
     }
 }

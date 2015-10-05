@@ -48,7 +48,6 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
      *
      * @param sessionFactory
      */
-    @Inject
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
