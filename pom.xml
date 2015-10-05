@@ -13,6 +13,31 @@
     </modules>
     <packaging>pom</packaging>
 
+    <name>infrastructure - Parent</name>
+    <description>基础设施快速开发工具 ,上级POM</description>
+    <url>https://github.com/cnlinjie/infrastructure</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Lin Jie</name>
+            <email>cnlinjie@foxmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/cnlinjie/infrastructure.git</connection>
+        <developerConnection>scm:git:git@github.com:cnlinjie/infrastructure.git</developerConnection>
+        <url>https://github.com/cnlinjie/infrastructure</url>
+    </scm>
+
+
     <properties>
         <slf4j-version>1.7.5</slf4j-version>
         <commons-lang3-version>3.3.2</commons-lang3-version>
