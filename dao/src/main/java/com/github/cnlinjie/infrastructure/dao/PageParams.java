@@ -8,41 +8,83 @@ import com.github.cnlinjie.infrastructure.util.spring.Assert;
  */
 public class PageParams {
 
-    private int pageIndex = 15;
-    private int pageSize = 1;
-    private long startRow = 1;
+    private int pageIndex = 1;
+    private int pageSize = 15;
+    private long startRow = 0;
 
+    /**
+     * 分页参数
+     * @param pageIndex   第{pageIndex}页
+     * @param pageSize 每页 {pageSize} 条
+     * @return
+     */
     public static PageParams page(int pageIndex, int pageSize) {
         return new PageParams(pageIndex, pageSize);
     }
 
+    /**
+     * 分页参数
+     * @param startRow 从第 {startRow} 条开始
+     * @param pageSize 往后取 {pageSize}  条
+     * @return
+     */
     public static PageParams page(long startRow, int pageSize) {
         return new PageParams(startRow, pageSize);
     }
 
+    /**
+     * 分页参数 ，默认往后取 15 条
+     * @param startRow 从第 {startRow} 条开始
+     * @return
+     */
     public static PageParams page(long startRow) {
         return new PageParams(startRow);
     }
 
+    /**
+     * 分页参数，默认每页 15 条
+     * @param pageIndex  第{pageIndex}页
+     * @return
+     */
     public static PageParams page(int pageIndex) {
         return new PageParams(pageIndex);
     }
 
+    /**
+     * 分页参数
+     * @param startRow 从第 {startRow} 条开始
+     * @param pageSize 往后取 {pageSize}  条
+     * @return
+     */
     public PageParams(long startRow, int pageSize) {
         setStartRow(startRow);
         setPageSize(pageSize);
     }
-
+    /**
+     * 分页参数
+     * @param pageIndex   第{pageIndex}页
+     * @param pageSize 每页 {pageSize} 条
+     * @return
+     */
     public PageParams(int pageIndex, int pageSize) {
         setPageIndex(pageIndex);
         setPageSize(pageSize);
     }
 
-
+    /**
+     * 分页参数 ,默认往后取 15 条
+     * @param startRow 从第 {startRow} 条开始
+     * @return
+     */
     public PageParams(long startRow) {
         setStartRow(startRow);
     }
 
+    /**
+     * 分页参数，默认每页 15 条
+     * @param pageIndex  第{pageIndex}页
+     * @return
+     */
     public PageParams(int pageIndex) {
         setPageIndex(pageIndex);
     }
