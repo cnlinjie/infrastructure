@@ -120,7 +120,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- / Hibernate -->
+            <!-- // Hibernate -->
 
             <!-- slf4j -->
             <dependency>
@@ -128,7 +128,7 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${org.slf4j.version}</version>
             </dependency>
-            <!-- slf4j end -->
+            <!-- // slf4j end -->
 
             <!--  Mysql-->
             <dependency>
@@ -136,7 +136,7 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
-            <!-- /Mysql -->
+            <!-- // Mysql -->
 
 
             <!-- 图片压缩、缩放、加水印等 -->
@@ -145,7 +145,21 @@
                 <artifactId>thumbnailator</artifactId>
                 <version>${thumbnailator-version}</version>
             </dependency>
-            <!-- / -->
+            <!-- // -->
+
+            <!-- POI -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>3.9</version>
+            </dependency>
+            <!-- 兼容Excel2007 -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>3.9</version>
+            </dependency>
+            <!-- // POI  -->
 
             <!-- Test -->
             <dependency>
@@ -154,7 +168,7 @@
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
-            <!-- /Test -->
+            <!-- // Test -->
 
         </dependencies>
     </dependencyManagement>

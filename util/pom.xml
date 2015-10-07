@@ -52,6 +52,18 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <!-- log4j end -->
+        <!-- POI -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <!-- 兼容Excel2007 -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+        <!-- // POI  -->
+
 
         <!-- Test -->
         <dependency>
