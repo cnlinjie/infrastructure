@@ -24,6 +24,13 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
 
     public Page<T> page(String hql, PageParams pageParams, Object... args);
 
+    /**
+     * 分页查询实体
+     * @param hql
+     * @param pageParams
+     * @param args
+     * @return
+     */
     public Page<T> page(String hql, PageParams pageParams, Map<String, Object> args);
 
 
