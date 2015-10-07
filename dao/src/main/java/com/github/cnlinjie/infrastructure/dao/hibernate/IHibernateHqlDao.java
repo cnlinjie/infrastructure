@@ -14,14 +14,46 @@ import java.util.Map;
 public interface IHibernateHqlDao<T, PK extends Serializable> {
 
 
+    /**
+     * 查询单个实体
+     * @param hql HQL语句
+     * @param args  HQL参数，如果没有时可不传
+     * @return
+     */
     public T unique(String hql, Object... args);
 
+    /**
+     * 查询单个实体
+     * @param hql HQL语句
+     * @param args HQL的 Map 参数，如果没有时可不传
+     * @return
+     */
     public T unique(String hql, Map<String, Object> args);
 
+    /**
+     * 查询对应实体的列表
+     * @param hql HQL语句
+     * @param args HQL参数，如果没有时可不传
+     * @return
+     */
     public List<T> list(String hql, Object... args);
 
+    /**
+     * 查询对应实体的列表
+     * @param hql HQL 语句
+     * @param args HQL的 Map 参数，如果没有时可不传
+     * @return
+     */
     public List<T> list(String hql, Map<String, Object> args);
 
+
+    /**
+     * 分页查询对应的实体
+     * @param hql  HQL 语句
+     * @param pageParams 分页参数
+     * @param args HQL参数，如果没有时可不传
+     * @return
+     */
     public Page<T> page(String hql, PageParams pageParams, Object... args);
 
     /**
@@ -46,7 +78,7 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
     /**
      * 查询单个字段值，如果你要使用这个查询一个对象，我也木有办法，里面实现使用的是：uniqueResult()
      * @param hql   hql 语句
-     * @param args 参数，如果没有时可不传
+     * @param args HQL 的Map参数，如果没有时可不传
      * @param <X>
      * @return 返回指定对象
      */
