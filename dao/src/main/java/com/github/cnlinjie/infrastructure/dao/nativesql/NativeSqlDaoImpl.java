@@ -125,30 +125,30 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return this.getSession().createSQLQuery(sql);
     }
 
-    @Override
+    
     public <X> X sqlUniqueValue(String sql, Object... args) {
         X x = (X) setParameters(createSQLQuery(sql), args).uniqueResult();
         return x;
     }
 
-    @Override
+    
     public <X> X sqlUniqueValue(String sql, Map<String, Object> args) {
         X x = (X) createSQLQuery(sql)
                 .setProperties(args).uniqueResult();
         return x;
     }
 
-    @Override
+    
     public Object[] sqlUniqueObject(String sql, Object... args) {
         return sqlListObjects(sql, args).get(0);
     }
 
-    @Override
+    
     public Object[] sqlUniqueObject(String sql, Map<String, Object> args) {
         return sqlListObjects(sql, args).get(0);
     }
 
-    @Override
+    
     public <X> X sqlUniqueBean(String sql, Class<? extends X> transferClass, Object... args) {
         X x = (X) setParameters(createSQLQuery(sql), args)
                 .setResultTransformer(Transformers.aliasToBean(transferClass))
@@ -156,7 +156,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return x;
     }
 
-    @Override
+    
     public <X> X sqlUniqueBean(String sql, Class<? extends X> transferClass, Map<String, Object> args) {
         X x = (X) createSQLQuery(sql)
                 .setProperties(args)
@@ -165,19 +165,19 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return x;
     }
 
-    @Override
+    
     public List<Object[]> sqlListObjects(String sql, Object... args) {
         List<Object[]> list = setParameters(createSQLQuery(sql), args).list();
         return list;
     }
 
-    @Override
+    
     public List<Object[]> sqlListObjects(String sql, Map<String, Object> args) {
         List<Object[]> list = createSQLQuery(sql).setProperties(args).list();
         return list;
     }
 
-    @Override
+    
     public Page<Object[]> sqlPageObjects(String sql, PageParams pageParams, Object... args) {
         List list = setParameters(createSQLQuery(sql), args)
                 .setFirstResult(pageParams.getStartRowByInt())
@@ -188,7 +188,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return page;
     }
 
-    @Override
+    
     public Page<Object[]> sqlPageObjects(String sql, PageParams pageParams, Map<String, Object> args) {
         List list = createSQLQuery(sql)
                 .setProperties(args)
@@ -201,7 +201,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
     }
 
 
-    @Override
+    
     public <X> List<X> sqlListBeans(String sql, Class<? extends X> transferClass, Object... args) {
         List<X> list = setParameters(createSQLQuery(sql), args)
                 .setResultTransformer(Transformers.aliasToBean(transferClass))
@@ -210,7 +210,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
     }
 
 
-    @Override
+    
     public <X> List<X> sqlListBeans(String sql, Class<? extends X> transferClass, Map<String, Object> args) {
         List<X> list = createSQLQuery(sql).setProperties(args)
                 .setResultTransformer(Transformers.aliasToBean(transferClass))
@@ -218,7 +218,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return list;
     }
 
-    @Override
+    
     public <X> Page<X> sqlPageBeans(String sql, Class<? extends X> transferClass, PageParams pageParams, Object... args) {
 
         List<X> list = setParameters(createSQLQuery(sql), args)
@@ -232,7 +232,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return page;
     }
 
-    @Override
+    
     public <X> Page<X> sqlPageBeans(String sql, Class<? extends X> transferClass, PageParams pageParams, Map<String, Object> args) {
         List<X> list =
                 createSQLQuery(sql)
@@ -247,7 +247,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
     }
 
 
-    @Override
+    
     public List<Map<String, Object>> sqlListMaps(String sql, Object... args) {
         List<Map<String, Object>> list =
                 setParameters(createSQLQuery(sql), args)
@@ -256,7 +256,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return list;
     }
 
-    @Override
+    
     public List<Map<String, Object>> sqlListMaps(String sql, Map<String, Object> args) {
 
         List<Map<String, Object>> list =
@@ -268,7 +268,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
 
     }
 
-    @Override
+    
     public List<Map<String, Object>> sqlListMaps(String sql, String[] fields, Object... args) {
         List<Object[]> list =
                 setParameters(createSQLQuery(sql), args)
@@ -279,7 +279,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return maps;
     }
 
-    @Override
+    
     public List<Map<String, Object>> sqlListMaps(String sql, String[] fields, Map<String, Object> args) {
         List<Object[]> list =
                 createSQLQuery(sql)
@@ -291,7 +291,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return maps;
     }
 
-    @Override
+    
     public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams, Object... args) {
 
         List<Map<String, Object>> list =
@@ -305,7 +305,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return page;
     }
 
-    @Override
+    
     public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams, Map<String, Object> args) {
 
         List<Map<String, Object>> list =
@@ -320,7 +320,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return page;
     }
 
-    @Override
+    
     public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams, String[] fields, Object... args) {
         List<Object[]> list =
                 setParameters(createSQLQuery(sql), args)
@@ -333,7 +333,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return page;
     }
 
-    @Override
+    
     public Page<Map<String, Object>> sqlPageMaps(String sql, PageParams pageParams, String[] fields, Map<String, Object> args) {
         List<Object[]> list =
                 createSQLQuery(sql)
@@ -348,14 +348,14 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
     }
 
 
-    @Override
+    
     public int sqlExecute(String sql, Object... args) {
         int i = setParameters(createSQLQuery(sql), args)
                 .executeUpdate();
         return i;
     }
 
-    @Override
+    
      public int sqlExecute(String sql, Map<String, Object> args) {
         int i = createSQLQuery(sql)
                 .setProperties(args)
