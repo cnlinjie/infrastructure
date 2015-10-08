@@ -114,28 +114,34 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return name;
     }
 
+    
     public T unique(Criterion criterion) {
         Criteria criteria = createCriteria(CriteriaParams.Add(criterion));
         return (T) criteria.uniqueResult();
     }
 
+    
     public List<T> list(Criterion criterion) {
         return list(CriteriaParams.Add(criterion));
     }
 
+    
     public List<T> list(Criterion criterion, Order order) {
         return list(CriteriaParams.Add(criterion).addOrder(order));
     }
 
+    
     public List<T> list(CriteriaParams params) {
-        Assert.isNull(params.getProjection(),"查询值为实体，请勿设�? projection �?");
+        Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
         return createCriteria(params).list();
     }
 
+    
     public Page<T> page(Criterion criterion, PageParams pageParams) {
         return page(CriteriaParams.Add(criterion), pageParams);
     }
 
+    
     public Page<T> page(Criterion criterion, PageParams pageParams, Order order) {
         return page(
                 CriteriaParams
@@ -146,7 +152,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     
     public Page<T> page(CriteriaParams params, PageParams pageParams) {
-        Assert.isNull(params.getProjection(),"查询值为实体，请勿设�? projection �?");
+        Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
         Criteria criteria =
                 createCriteria(params)
                         .setFirstResult(pageParams.getStartRowByInt())
@@ -276,7 +282,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     
     public List<Map<String, Object>> listMaps(CriteriaParams params) {
-        Assert.notNull(params.getProjection(), "�?要指定投影的列名");
+        Assert.notNull(params.getProjection(), "需要指定投影的列名");
         List<Map<String, Object>> maps = createCriteria(params)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
@@ -303,7 +309,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     
     public Page<Map<String, Object>> pageMaps(CriteriaParams params, PageParams pageParams) {
-        Assert.notNull(params.getProjection(), "�?要指定投影的列名");
+        Assert.notNull(params.getProjection(), "需要指定投影的列名");
         List<Map<String, Object>> maps =
                 createCriteria(params)
                         .setFirstResult(pageParams.getStartRowByInt())
@@ -314,14 +320,14 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         Page<Map<String, Object>> page = new Page<Map<String, Object>>(maps, total, pageParams.getPageIndex(), pageParams.getPageSize());
 
 /*
-       // 自己实现的方�?
+       // 自己实现的方式
         List<Object[]> list =
                 createCriteria(params)
                         .setFirstResult(pageParams.getStartRowByInt())
                         .setMaxResults(pageParams.getPageSize())
                         .list();
         Long total = getCountRow(params);
-        Assert.notNull(params.getProjection(), "�?要指定投影的列名");
+        Assert.notNull(params.getProjection(), "需要指定投影的列名");
         String[] fieldNames = params.getProjection().getAliases();
         List<Map<String, Object>> maps = QueryUtil.arraysToMaps(list, fieldNames);
         Page<Map<String, Object>> page = new Page<Map<String, Object>>(maps, total, pageParams.getPageIndex(), pageParams.getPageSize());
