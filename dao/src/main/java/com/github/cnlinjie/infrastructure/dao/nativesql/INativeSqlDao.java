@@ -115,7 +115,7 @@ public interface INativeSqlDao {
 
 
     /**
-     * 查询多条记录，每条记录转为Bean存储
+     * 查询多条记录，每条记录转为Bean存储，查询出来的字段名称要与 Bean 中的字段一致,否则会爆没有 没有 PropertyNotFoundException 错误
      *
      * @param sql           查询的SQl语句
      * @param transferClass 需要转换的Bean对象
@@ -126,7 +126,7 @@ public interface INativeSqlDao {
     public <X> List<X> sqlListBeans(String sql, Class<? extends X> transferClass, Object... args);
 
     /**
-     * 查询多条记录，每条记录转为Bean存储
+     * 查询多条记录，每条记录转为Bean存储，查询出来的字段名称要与 Bean 中的字段一致,否则会爆没有 没有 PropertyNotFoundException 错误
      *
      * @param sql           查询的SQl语句
      * @param transferClass 需要转换的Bean对象
@@ -137,7 +137,7 @@ public interface INativeSqlDao {
     public <X> List<X> sqlListBeans(String sql, Class<? extends X> transferClass, Map<String, Object> args);
 
     /**
-     * 分页查询多条记录，每条记录转为Bean存储
+     * 分页查询多条记录，每条记录转为Bean存储，查询出来的字段名称要与 Bean 中的字段一致,否则会爆没有 没有 PropertyNotFoundException 错误
      *
      * @param sql           查询的SQl语句
      * @param transferClass 需要转换的Bean对象
@@ -149,7 +149,7 @@ public interface INativeSqlDao {
     public <X> Page<X> sqlPageBeans(String sql, Class<? extends X> transferClass, PageParams pageParams, Object... args);
 
     /**
-     * 分页查询多条记录，每条记录转为Bean存储
+     * 分页查询多条记录，每条记录转为Bean存储，查询出来的字段名称要与 Bean 中的字段一致,否则会爆没有 没有 PropertyNotFoundException 错误
      *
      * @param sql           查询的SQl语句
      * @param transferClass 需要转换的Bean对象
