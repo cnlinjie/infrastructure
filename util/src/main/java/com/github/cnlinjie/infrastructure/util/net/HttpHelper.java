@@ -1,6 +1,7 @@
 package com.github.cnlinjie.infrastructure.util.net;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
@@ -8,6 +9,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.util.CharsetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +31,25 @@ public class HttpHelper {
 
     private Logger logger = LoggerFactory.getLogger(HttpHelper.class);
 
-    public String get(String url, Map<String, Object> params, String token)
+    public String get(String url, Map<String, Object> params)
             throws IOException {
         logger.info("sending request - GET " + url);
         return Request.Get(url + queryString(params))
                 .socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
-                .addHeader("token", token == null ? "" : token)
+                .execute()
+                .returnContent()
+                .asString();
+    }
+
+    public String get(String url, Map<String, Object> params, Map<String,String> headers)
+            throws IOException {
+        logger.info("sending request - GET " + url);
+        System.out.println(url + queryString(params));
+        return Request.Get(url + queryString(params))
+                .socketTimeout(connectionTimeout)
+                .connectTimeout(connectionTimeout)
+                .setHeaders(headers(headers))
                 .execute()
                 .returnContent()
                 .asString();
@@ -136,6 +150,16 @@ public class HttpHelper {
         }
 
         return !plist.isEmpty() ? "?" + StringUtils.join(plist, "&") : "";
+    }
+
+    private Header[] headers(Map<String, String> data) {
+        Header[] headers = new Header[data.size()];
+        int i = 0;
+        for ( String key : data.keySet() ) {
+            headers[i] = new BasicHeader( key,data.get(key) );
+            i++;
+        }
+        return  headers;
     }
 
 
