@@ -120,7 +120,13 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return (T) criteria.uniqueResult();
     }
 
-    
+
+    public T unique(CriteriaParams criteriaParams) {
+        Criteria criteria = createCriteria(criteriaParams);
+        return (T) criteria.uniqueResult();
+    }
+
+
     public List<T> list(Criterion criterion) {
         return list(CriteriaParams.Add(criterion));
     }
@@ -396,7 +402,6 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return t;
     }
 
-    
     public T unique(String hql, Map<String, Object> args) {
         T t = (T) createQuery(hql)
                 .setProperties(args)

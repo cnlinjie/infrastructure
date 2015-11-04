@@ -25,6 +25,14 @@ public interface IHibernateCriteriaDao<T, PK extends Serializable> {
      */
     public T unique(Criterion criterion);
 
+
+    /**
+     * 查询单个实体
+     * @param criteriaParams 查询条件
+     * @return
+     */
+    public T unique(CriteriaParams criteriaParams);
+
     /**
      * 查询列表
      * @param criterion 查询条件
