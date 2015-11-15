@@ -107,29 +107,29 @@ public interface IHibernateCriteriaDao<T, PK extends Serializable> {
      * @param criterion
      * @param projection
      */
-    public Object[] uniqueObject(Criterion criterion,Projection projection);
+    public <X> X uniqueObject(Criterion criterion,Projection projection);
 
     /**
-     * 查询多条记录
+     * 查询多条记录 ，可以是Object[] 也可以是单值
      * @param criterion 条件
      * @param projection 需要查询的字段
      * @return
      */
-    public List<Object[]> listObjects(Criterion criterion,Projection projection);
-    public List<Object[]> listObjects(Criterion criterion,Projection projection,Order order);
-    public List<Object[]> listObjects(CriteriaParams params);
+    public <X> List<X> listObjects(Criterion criterion,Projection projection);
+    public <X> List<X> listObjects(Criterion criterion,Projection projection,Order order);
+    public <X> List<X> listObjects(CriteriaParams params);
 
 
     /**
-     * 分页查询多条记录 
+     * 分页查询多条记录 ，可以是Object[] 也可以是单值
      * @param criterion  查询条件
      * @param projection 需要查询的字段
      * @param pageParams 分页参数
      * @return
      */
-    public Page<Object[]> pageObjects(Criterion criterion,Projection projection,PageParams pageParams);
-    public Page<Object[]> pageObjects(Criterion criterion,Projection projection,Order order,PageParams pageParams);
-    public Page<Object[]> pageObjects(CriteriaParams params,PageParams pageParams);
+    public <X> Page<X> pageObjects(Criterion criterion,Projection projection,PageParams pageParams);
+    public <X> Page<X> pageObjects(Criterion criterion,Projection projection,Order order,PageParams pageParams);
+    public <X> Page<X> pageObjects(CriteriaParams params,PageParams pageParams);
 
 
     /**

@@ -91,7 +91,7 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
      * @param args 参数 ，如上面的HQL，此时可以传 对应的参数值，如果没有时可不传
      * @return
      */
-    public Object[] uniqueObject(String hql, Object... args);
+    public <X> X uniqueObject(String hql, Object... args);
 
     /**
      * 查询一条记录，但多个字段，如 member 表里面，我只想要 username,password ，如下HQL<br/>
@@ -101,7 +101,7 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
      * @return
      */
 
-    public Object[] uniqueObject(String hql, Map<String, Object> args);
+    public <X> X uniqueObject(String hql, Map<String, Object> args);
 
     /**
      * 查询多条记录，一个记录包含多个字段，如member 我只想要 username,password ，如下HQL<br/>
@@ -110,7 +110,7 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
      * @param args  参数 ，如上面的HQL，此时可以传 对应的参数值，如果没有时可不传
      * @return
      */
-    public List<Object[]> listObjects(String hql, Object... args);
+    public <X> List<X> listObjects(String hql, Object... args);
 
     /**
      * 查询多条记录，一个记录包含多个字段，如member 我只想要 username,password ，如下HQL<br/>
@@ -119,7 +119,7 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
      * @param args  Map 参数 ，如上面的HQL，此时可以传 对应的Map结构为{delStatus:0}，如果没有时可不传
      * @return
      */
-    public List<Object[]> listObjects(String hql, Map<String, Object> args);
+    public <X> List<X> listObjects(String hql, Map<String, Object> args);
 
 
     /**
@@ -130,7 +130,7 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
      * @param args M 参数 ，如上面的HQL，此时可以传对应值 ，如果没有时可不传
      * @return
      */
-    public Page<Object[]> pageObjects(String hql, PageParams pageParams, Object... args);
+    public <X> Page<X> pageObjects(String hql, PageParams pageParams, Object... args);
 
     /**
      * 分页查询记录，一个记录包含多个字段，如member 我只想要 username,password ，如下HQL<br/>
@@ -140,7 +140,7 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
      * @param args Map 参数 ，如上面的HQL，此时可以传 对应的Map结构为{delStatus:0} ，如果没有时可不传
      * @return
      */
-    public Page<Object[]> pageObjects(String hql, PageParams pageParams, Map<String, Object> args);
+    public <X> Page<X> pageObjects(String hql, PageParams pageParams, Map<String, Object> args);
 
     /**
      * 查询的结果集合为Map, 写HQL语句时，需要使用 as 来重命名，否则会以数组序号作为key值，HQL可以如下：

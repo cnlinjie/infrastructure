@@ -186,7 +186,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     
-    public Object[] uniqueObject(Criterion criterion, Projection projection) {
+    public <X> X uniqueObject(Criterion criterion, Projection projection) {
         Criteria criteria = createCriteria(
                 CriteriaParams
                         .Add(criterion)
@@ -195,13 +195,13 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         );
         List list = criteria.list();
         if (list.size() > 0) {
-            return (Object[]) list.get(0);
+            return (X) list.get(0);
         }
         return null;
     }
 
     
-    public List<Object[]> listObjects(Criterion criterion, Projection projection) {
+    public <X> List<X> listObjects(Criterion criterion, Projection projection) {
 
         return listObjects(CriteriaParams
                 .Add(criterion)
@@ -209,7 +209,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     
-    public List<Object[]> listObjects(Criterion criterion, Projection projection, Order order) {
+    public <X> List<X> listObjects(Criterion criterion, Projection projection, Order order) {
         return listObjects(CriteriaParams
                 .Add(criterion)
                 .addProjection(projection)
@@ -217,14 +217,14 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     
-    public List<Object[]> listObjects(CriteriaParams params) {
+    public <X> List<X> listObjects(CriteriaParams params) {
         Criteria criteria = createCriteria(params);
-        List<Object[]> list = criteria.list();
+        List<X> list = criteria.list();
         return list;
     }
 
     
-    public Page<Object[]> pageObjects(Criterion criterion, Projection projection, PageParams pageParams) {
+    public <X> Page<X> pageObjects(Criterion criterion, Projection projection, PageParams pageParams) {
         return pageObjects(
                 CriteriaParams
                         .Add(criterion)
@@ -234,7 +234,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     
-    public Page<Object[]> pageObjects(Criterion criterion, Projection projection, Order order, PageParams pageParams) {
+    public <X> Page<X> pageObjects(Criterion criterion, Projection projection, Order order, PageParams pageParams) {
 
         return pageObjects(
                 CriteriaParams
@@ -246,13 +246,13 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     
-    public Page<Object[]> pageObjects(CriteriaParams params, PageParams pageParams) {
+    public <X>  Page<X> pageObjects(CriteriaParams params, PageParams pageParams) {
         Criteria criteria = createCriteria(params)
                 .setFirstResult(pageParams.getStartRowByInt())
                 .setMaxResults(pageParams.getPageSize());
         Long total = getCountRow(params);
-        List<Object[]> list = criteria.list();
-        Page<Object[]> page = new Page<Object[]>(list, total, pageParams.getPageIndex(), pageParams.getPageSize());
+        List<X> list = criteria.list();
+        Page<X> page = new Page<X>(list, total, pageParams.getPageIndex(), pageParams.getPageSize());
         return page;
     }
 
@@ -455,8 +455,8 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     
-    public Object[] uniqueObject(String hql, Object... args) {
-        List<Object[]> list = listObjects(hql, args);
+    public <X> X uniqueObject(String hql, Object... args) {
+        List<X> list = listObjects(hql, args);
         if (list.size() > 0) {
             return list.get(0);
         }
@@ -464,8 +464,8 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     
-    public Object[] uniqueObject(String hql, Map<String, Object> args) {
-        List<Object[]> list = listObjects(hql, args);
+    public <X> X uniqueObject(String hql, Map<String, Object> args) {
+        List<X> list = listObjects(hql, args);
         if (list.size() > 0) {
             return list.get(0);
         }
@@ -473,37 +473,37 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     
-    public List<Object[]> listObjects(String hql, Object... args) {
+    public <X> List<X> listObjects(String hql, Object... args) {
         List list = setParameters(createQuery(hql), args).list();
         return list;
     }
 
     
-    public List<Object[]> listObjects(String hql, Map<String, Object> args) {
+    public <X> List<X> listObjects(String hql, Map<String, Object> args) {
         List list = createQuery(hql).setProperties(args).list();
         return list;
     }
 
     
-    public Page<Object[]> pageObjects(String hql, PageParams pageParams, Object... args) {
-        List<Object[]> list = setParameters(createQuery(hql), args)
+    public <X> Page<X> pageObjects(String hql, PageParams pageParams, Object... args) {
+        List<X> list = setParameters(createQuery(hql), args)
                 .setFirstResult(pageParams.getStartRowByInt())
                 .setMaxResults(pageParams.getPageSize())
                 .list();
         Long totalCount = getCountRow(hql, args);
-        Page<Object[]> page = new Page<Object[]>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        Page<X> page = new Page<X>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
         return page;
     }
 
     
-    public Page<Object[]> pageObjects(String hql, PageParams pageParams, Map<String, Object> args) {
-        List<Object[]> list = createQuery(hql)
+    public <X> Page<X> pageObjects(String hql, PageParams pageParams, Map<String, Object> args) {
+        List<X> list = createQuery(hql)
                 .setProperties(args)
                 .setFirstResult(pageParams.getStartRowByInt())
                 .setMaxResults(pageParams.getPageSize())
                 .list();
         Long totalCount = getCountRow(hql, args);
-        Page<Object[]> page = new Page<Object[]>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
+        Page<X> page = new Page<X>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
         return page;
     }
 
