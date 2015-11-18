@@ -8,7 +8,7 @@ import java.util.Random;
  * 验证码生成器
  *
  */
-public class VerifyCodeUtils {
+public class ImageCodeUtils {
 
 	public static String FONT_FAMILY = "Arial Black";
 
