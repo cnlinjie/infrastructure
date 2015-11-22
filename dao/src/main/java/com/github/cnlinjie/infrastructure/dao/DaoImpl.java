@@ -81,14 +81,14 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
     }
 
     
-    public T find(String key, String value) {
+    public T find(String key, Object value) {
         T unique = this.unique(
                 Restrictions.eq(key, value)
         );
         return unique;
     }
 
-    public List<T> findList(String key, String value) {
+    public List<T> findList(String key, Object value) {
         List<T>  list= this.list(
                 Restrictions.eq(key, value)
         );

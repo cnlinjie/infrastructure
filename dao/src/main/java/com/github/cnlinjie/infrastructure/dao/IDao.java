@@ -44,11 +44,11 @@ public interface IDao<T ,PK extends Serializable> {
     public T get(PK pk);
 
     // 根据属性查单个
-    public T find(String key,String value);
+    public T find(String key,Object value);
 
 
     // 根据属性查单个
-    public List<T> findList(String key,String value);
+    public List<T> findList(String key,Object value);
 
     // 分页查
     public Page<T>  findPage(PageParams params);
