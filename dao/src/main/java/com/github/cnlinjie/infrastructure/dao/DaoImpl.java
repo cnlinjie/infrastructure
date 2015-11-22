@@ -88,7 +88,13 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
         return unique;
     }
 
-    
+    public List<T> findList(String key, String value) {
+        List<T>  list= this.list(
+                Restrictions.eq(key, value)
+        );
+        return list;
+    }
+
     public Page<T> findPage(PageParams params) {
         String hql = " from " + getTableName()  ;
         Page<T> page = page(hql, params);

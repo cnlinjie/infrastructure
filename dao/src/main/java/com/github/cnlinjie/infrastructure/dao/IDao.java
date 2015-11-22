@@ -46,6 +46,10 @@ public interface IDao<T ,PK extends Serializable> {
     // 根据属性查单个
     public T find(String key,String value);
 
+
+    // 根据属性查单个
+    public List<T> findList(String key,String value);
+
     // 分页查
     public Page<T>  findPage(PageParams params);
 
