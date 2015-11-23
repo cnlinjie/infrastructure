@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public abstract class HibernateSupportDao<T, PK extends Serializable> implements IHibernateCriteriaDao<T, PK>, IHibernateHqlDao<T, PK> {
 
-    private boolean useCurrentSession = false;
+    private boolean useCurrentSession = true;
 
     protected SessionFactory sessionFactory;
 
