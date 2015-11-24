@@ -23,6 +23,20 @@ public interface IHibernateCriteriaDao<T, PK extends Serializable> {
      * @param criterion 查询条件
      * @return
      */
+    public T find(Criterion criterion);
+
+    /**
+     * 查询单个实体
+     * @param criteriaParams 查询条件
+     * @return
+     */
+    public T find(CriteriaParams criteriaParams);
+
+    /**
+     * 查询单个实体
+     * @param criterion 查询条件
+     * @return
+     */
     public T unique(Criterion criterion);
 
 

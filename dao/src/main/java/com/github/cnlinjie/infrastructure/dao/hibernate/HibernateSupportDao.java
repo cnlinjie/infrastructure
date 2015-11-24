@@ -114,7 +114,15 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return name;
     }
 
-    
+
+    public T find(Criterion criterion) {
+        return unique(criterion);
+    }
+
+    public T find(CriteriaParams criteriaParams) {
+        return unique(criteriaParams);
+    }
+
     public T unique(Criterion criterion) {
         Criteria criteria = createCriteria(CriteriaParams.Add(criterion));
         return (T) criteria.uniqueResult();
