@@ -37,7 +37,7 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
 
     
     public void delete(PK pk) {
-        this.getSession().delete(pk);
+        this.getSession().delete(get(pk));
     }
 
     
