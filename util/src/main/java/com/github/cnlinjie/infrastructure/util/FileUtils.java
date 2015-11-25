@@ -48,6 +48,8 @@ public class FileUtils {
 
     private static String _uploadFileByUUIDPath(String parentDir, String fileName, InputStream in) throws IOException {
         String uuid = UUID.randomUUID().toString();
+        String fileEnd = fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
+        String newFileName = String.format("%s.%s", uuid, fileEnd);
         String newFilePath =  String.format("%s/%s/%s/%s",
                 uuid.substring(0,1),
                 uuid.substring(1,2),
@@ -60,10 +62,10 @@ public class FileUtils {
                 throw new IllegalArgumentException("目录创建失败");
             }
         }
-        String filePath = parentDir + "/" +  newFilePath + "/" + fileName;
+        String filePath = parentDir + "/" +  newFilePath + "/" + newFileName;
         FileOutputStream out = new FileOutputStream(filePath);
         FileCopyUtils.copy(in,out);
-        return newFilePath + "/" + fileName;
+        return newFilePath + "/" + newFileName;
     }
 
 
