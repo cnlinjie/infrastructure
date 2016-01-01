@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,32 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
         this.getSession().delete(t);
     }
 
-    
+
+
+    /**
+     * 批量保存
+     */
+    public void batchSaveOrUpdate(Collection<T> collection) {
+        batchSaveOrUpdate(collection, 100);
+    }
+
+    /**
+     * 批量保存
+     */
+    public void batchSaveOrUpdate(Collection<T> collection, int batch) {
+        int count = 0;
+        for (T t : collection) {
+            saveOrUpdate(t);
+            if (++count % batch == 0) {
+                getSession().flush();
+                getSession().clear();
+            }
+        }
+        getSession().flush();
+        getSession().clear();
+    }
+
+
     public void saveOrUpdate(T t) {
         this.getSession().saveOrUpdate(t);
     }

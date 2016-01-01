@@ -42,6 +42,23 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         this.entityClass = ReflectionUtils.getSuperClassGenricType(getClass());
     }
 
+
+    /**
+     *
+     * @return
+     */
+    public boolean isUseCurrentSession() {
+        return useCurrentSession;
+    }
+
+    /**
+     * 设置是否从当前线程读取Session，如果是 {false} 则，使用openSession
+     * @param useCurrentSession
+     */
+    public void setUseCurrentSession(boolean useCurrentSession) {
+        this.useCurrentSession = useCurrentSession;
+    }
+
     /**
      * 设置Hibernate sessionFactory
      *
@@ -168,10 +185,10 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     public Page<T> page(CriteriaParams params, PageParams pageParams) {
         Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
         Criteria criteria =
-                createCriteria(params)
-                        .setFirstResult(pageParams.getStartRowByInt())
-                        .setMaxResults(pageParams.getPageSize());
+                createCriteria(params);
         Long total = getCountRow(params);
+        criteria.setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize());
         List<T> list = criteria.list();
         Page<T> page = new Page<T>(list, total, pageParams.getPageIndex(), pageParams.getPageSize());
         return page;
@@ -255,10 +272,11 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     
     public <X>  Page<X> pageObjects(CriteriaParams params, PageParams pageParams) {
-        Criteria criteria = createCriteria(params)
-                .setFirstResult(pageParams.getStartRowByInt())
-                .setMaxResults(pageParams.getPageSize());
+        Criteria criteria = createCriteria(params);
+
         Long total = getCountRow(params);
+        criteria.setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize());
         List<X> list = criteria.list();
         Page<X> page = new Page<X>(list, total, pageParams.getPageIndex(), pageParams.getPageSize());
         return page;
