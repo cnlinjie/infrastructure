@@ -67,8 +67,8 @@ public class PageParams {
      * @return
      */
     public PageParams(int pageIndex, int pageSize) {
-        setPageIndex(pageIndex);
         setPageSize(pageSize);
+        setPageIndex(pageIndex);
     }
 
     /**
