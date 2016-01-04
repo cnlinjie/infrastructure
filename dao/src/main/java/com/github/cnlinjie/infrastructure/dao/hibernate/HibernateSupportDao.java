@@ -126,6 +126,11 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return (Long) total;
     }
 
+    protected Long getCountRow(Criteria criteria) {
+        Object total = criteria.setProjection(Projections.rowCount()).uniqueResult();
+        return (Long) total;
+    }
+
     protected String getTableName() {
         String name = ReflectionUtils.getSuperClassGenricType(getClass()).getName();
         return name;
