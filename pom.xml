@@ -15,7 +15,7 @@
 
     <name>infrastructure - Parent</name>
     <description>基础设施快速开发工具 ,上级POM</description>
-    <url>https://github.com/cnlinjie/infrastructure</url>
+    <url>http://git.harme.cn/linjie/infrastructure</url>
 
     <issueManagement>
         <system>Github Issue</system>
@@ -32,14 +32,14 @@
     <developers>
         <developer>
             <name>Lin Jie</name>
-            <email>cnlinjie@foxmail.com</email>
+            <email>linj@harme.cn</email>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/cnlinjie/infrastructure.git</connection>
-        <developerConnection>scm:git:git@github.com:cnlinjie/infrastructure.git</developerConnection>
-        <url>https://github.com/cnlinjie/infrastructure</url>
+        <connection>scm:git:http://git.harme.cn/linjie/infrastructure.git</connection>
+        <developerConnection>scm:git:git@git.harme.cn:linjie/infrastructure.git</developerConnection>
+        <url>http://git.harme.cn/linjie/infrastructure</url>
     </scm>
 
 
@@ -184,53 +184,20 @@
         <profile>
             <id>release</id>
             <distributionManagement>
-                <snapshotRepository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-                </snapshotRepository>
                 <repository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <id>harme-nexus-releases</id>
+                    <url>http://maven.harme.cn/repository/maven-releases/</url>
                 </repository>
+                <snapshotRepository>
+                    <id>harme-nexus-snapshots</id>
+                    <url>http://maven.harme.cn/repository/maven-snapshots/</url>
+                </snapshotRepository>
             </distributionManagement>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 
     <build>
         <plugins>
-            <!-- Source -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Compiler  -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
