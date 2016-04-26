@@ -83,7 +83,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
      * @return {@link org.hibernate.Session}
      */
     public Session getSession() {
-        if (null != session && session.isOpen()) {
+        if (!useCurrentSession && null != session && session.isOpen()) {
             return session;
         }
         if (useCurrentSession) {
