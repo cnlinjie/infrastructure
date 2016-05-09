@@ -100,6 +100,14 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
         return i;
     }
 
+    public int delete(List<PK> ids,String idName) {
+        String hql  = " delete from " + getTableName() + " t where t."+ idName +" in (:ids)";
+        int i = createQuery(hql)
+                .setParameterList("ids", ids)
+                .executeUpdate();
+        return i;
+    }
+
     
     public T get(PK pk) {
         T t = (T) this.getSession().get(this.entityClass, pk);
