@@ -22,6 +22,20 @@
         <url>https://github.com/cnlinjie/infrastructure/issues</url>
     </issueManagement>
 
+    <repositories>
+        <repository>
+            <id>harme-maven-public</id>
+            <name>harme-maven-public</name>
+            <url>http://maven.harme.cn/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -41,7 +55,6 @@
         <developerConnection>scm:git:git@git.harme.cn:linjie/infrastructure.git</developerConnection>
         <url>http://git.harme.cn/linjie/infrastructure</url>
     </scm>
-
 
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
@@ -187,11 +200,13 @@
             <distributionManagement>
                 <repository>
                     <id>harme-nexus-releases</id>
+                    <name>harme-nexus-releases</name>
                     <url>http://maven.harme.cn/repository/maven-releases/</url>
                 </repository>
                 <snapshotRepository>
                     <id>harme-nexus-snapshots</id>
                     <url>http://maven.harme.cn/repository/maven-snapshots/</url>
+
                 </snapshotRepository>
             </distributionManagement>
         </profile>
