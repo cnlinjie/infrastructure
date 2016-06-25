@@ -18,13 +18,14 @@ public class FileUtils {
      * 随机 UUID 值 : 4865b709-06bd-4fd1-b707-f14bd0dd785f <br/>
      * 此时文件会存储在 : {parentDir}/4/8/6/4865b709-06bd-4fd1-b707-f14bd0dd785f/test.png  <br/>
      * 返回值为：4/8/6/4865b709-06bd-4fd1-b707-f14bd0dd785f/test.png  <br/>
-     * @param parentDir  存储底目录
-     * @param fileName 文件名
-     * @param in  输入流
-     * @return  返回新的文件路径（只相对于 parentDir)
+     *
+     * @param parentDir 存储底目录
+     * @param fileName  文件名
+     * @param in        输入流
+     * @return 返回新的文件路径（只相对于 parentDir)
      * @throws IOException
      */
-    public static String uploadFileByUUIDPath(String parentDir, String fileName, InputStream in) throws IOException {
+    public static String uploadFileByUUIDPath (String parentDir, String fileName, InputStream in) throws IOException {
         return _uploadFileByUUIDPath(parentDir, fileName, in);
     }
 
@@ -35,65 +36,80 @@ public class FileUtils {
      * 随机 UUID 值 : 4865b709-06bd-4fd1-b707-f14bd0dd785f <br/>
      * 此时文件会存储在 : {parentDir}/4/8/6/4865b709-06bd-4fd1-b707-f14bd0dd785f/test.png  <br/>
      * 返回值为：4/8/6/4865b709-06bd-4fd1-b707-f14bd0dd785f/test.png  <br/>
-     * @param parentDir  存储底目录
-     * @param fileName 文件名
-     * @param in  File 文件，需要上传的文件
-     * @return  返回新的文件路径（只相对于 parentDir)
+     *
+     * @param parentDir 存储底目录
+     * @param fileName  文件名
+     * @param in        File 文件，需要上传的文件
+     * @return 返回新的文件路径（只相对于 parentDir)
      * @throws IOException
      */
-    public static String uploadFileByUUIDPath(String parentDir, String fileName, File in) throws IOException {
+    public static String uploadFileByUUIDPath (String parentDir, String fileName, File in) throws IOException {
         return _uploadFileByUUIDPath(parentDir, fileName, new FileInputStream(in));
     }
 
 
-    private static String _uploadFileByUUIDPath(String parentDir, String fileName, InputStream in) throws IOException {
-        String uuid = UUID.randomUUID().toString();
-        String fileEnd = fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
-        String newFileName = String.format("%s.%s", uuid, fileEnd);
-        String newFilePath =  String.format("%s/%s/%s/%s",
-                uuid.substring(0,1),
-                uuid.substring(1,2),
-                uuid.substring(2,3),
-                uuid);
+    private static String _uploadFileByUUIDPath (String parentDir, String fileName, InputStream in) throws IOException {
+        String byUUIDRelativePath = getByUUIDRelativePath(parentDir, fileName);
+        String filePath = parentDir + byUUIDRelativePath;
+        FileOutputStream out = new FileOutputStream(filePath);
+        FileCopyUtils.copy(in, out);
+        return  byUUIDRelativePath;
+    }
 
-        File fileDir = new File(parentDir + "/" +  newFilePath);
-        if(!fileDir.exists()){
-            if(!fileDir.mkdirs()) {
+    public static String getByUUIDRelativePath (String parentDir, String fileName) throws IOException {
+        String uuid = UUID.randomUUID().toString();
+        String fileEnd = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        String newFileName = String.format("%s.%s", uuid, fileEnd);
+        String newFilePath = String.format("/%s/%s/%s/%s/",
+                uuid.substring(0, 1),
+                uuid.substring(1, 2),
+                uuid.substring(2, 3),
+                uuid);
+        File fileDir = new File(parentDir + newFilePath);
+        if (!fileDir.exists()) {
+            if (!fileDir.mkdirs()) {
                 throw new IllegalArgumentException("目录创建失败");
             }
         }
-        String filePath = parentDir + "/" +  newFilePath + "/" + newFileName;
-        FileOutputStream out = new FileOutputStream(filePath);
-        FileCopyUtils.copy(in,out);
-        return newFilePath + "/" + newFileName;
+        return newFilePath + newFileName;
     }
 
 
-/**
+
+
+    /**
      * 上传文件，或者也叫复制文件，将传入的文件流存储到指定的位置，并返回新文件的路径
-     * @param parentDir  存储底目录
-     * @param fileName 文件名
-     * @param in  输入流
-     * @return  返回新的文件路径（只相对于 parentDir)
+     *
+     * @param parentDir 存储底目录
+     * @param fileName  文件名
+     * @param in        输入流
+     * @return 返回新的文件路径（只相对于 parentDir)
      * @throws IOException
      */
 
-    public static String uploadFile(String parentDir, String fileName, InputStream in) throws IOException {
-        String fileEnd = fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
+    public static String uploadFile (String parentDir, String fileName, InputStream in) throws IOException {
+        String fileEnd = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
         File fileDir = new java.io.File(parentDir);
         String newFileName = String.format("%s.%s", UUID.randomUUID().toString(), fileEnd);
-        if(!fileDir.exists()){
-            if(!fileDir.mkdirs()) {
+        if (!fileDir.exists()) {
+            if (!fileDir.mkdirs()) {
                 throw new IllegalArgumentException("目录创建失败");
             }
         }
-        String filePath = parentDir + "/" +  newFileName;
+        String filePath = parentDir + "/" + newFileName;
         FileOutputStream out = new FileOutputStream(filePath);
-        FileCopyUtils.copy(in,out);
+        FileCopyUtils.copy(in, out);
         return newFileName;
     }
 
-
+    public static void main (String[] args) {
+        try {
+            String byUUIDRelativePath = getByUUIDRelativePath("/data/test/upload", "111.jpg");
+            System.out.println(byUUIDRelativePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

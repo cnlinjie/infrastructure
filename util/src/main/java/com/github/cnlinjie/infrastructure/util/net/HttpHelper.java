@@ -81,6 +81,18 @@ public class HttpHelper {
                 .asString();
     }
 
+    public String post(String url, Map<String, Object> data, Map<String,String> headers)
+            throws IOException {
+        logger.info("sending request - POST " + url);
+        return Request.Post(url).socketTimeout(connectionTimeout)
+                .connectTimeout(connectionTimeout)
+                .bodyForm(form(data), CharsetUtils.get("utf-8"))
+                .setHeaders(headers(headers))
+                .execute()
+                .returnContent()
+                .asString();
+    }
+
     public String post(String url, InputStream fileStream, Map<String, Object> params)
             throws IOException {
         logger.info("sending request - POST " + url);
