@@ -48,7 +48,32 @@ public class FileUtils {
     }
 
 
+    /**
+     * 上传文件，或者也叫复制文件，将传入的文件流存储到指定的位置，存储位置为存储底目录+UUID生成的规则，如下规则:<br/>
+     * 如参数 fileName 为 : test.png  <br/>
+     * 随机 UUID 值 : 4865b709-06bd-4fd1-b707-f14bd0dd785f <br/>
+     * 此时文件会存储在 : {parentDir}/4/8/6/4865b709-06bd-4fd1-b707-f14bd0dd785f/test.png  <br/>
+     * 返回值为：4/8/6/4865b709-06bd-4fd1-b707-f14bd0dd785f/test.png  <br/>
+     *
+     * @param parentDir 存储底目录
+     * @param fileName  文件名
+     * @param in        字节流
+     * @return 返回新的文件路径（只相对于 parentDir)
+     * @throws IOException
+     */
+    public static String uploadFileByUUIDPath (String parentDir, String fileName, byte[] in) throws IOException {
+        return _uploadFileByUUIDPath(parentDir, fileName, in);
+    }
+
     private static String _uploadFileByUUIDPath (String parentDir, String fileName, InputStream in) throws IOException {
+        String byUUIDRelativePath = getByUUIDRelativePath(parentDir, fileName);
+        String filePath = parentDir + byUUIDRelativePath;
+        FileOutputStream out = new FileOutputStream(filePath);
+        FileCopyUtils.copy(in, out);
+        return  byUUIDRelativePath;
+    }
+
+    private static String _uploadFileByUUIDPath (String parentDir, String fileName, byte[] in) throws IOException {
         String byUUIDRelativePath = getByUUIDRelativePath(parentDir, fileName);
         String filePath = parentDir + byUUIDRelativePath;
         FileOutputStream out = new FileOutputStream(filePath);

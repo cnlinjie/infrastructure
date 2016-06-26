@@ -158,6 +158,47 @@ public class HttpHelper {
                 .asString();
     }
 
+    /**
+     * post json
+     * @param url
+     * @param data json string
+     * @return
+     * @throws java.io.IOException
+     */
+    public String postJson(String url, String data)
+            throws IOException {
+        logger.info("sending request - POST " + url);
+        return Request.Post(url).socketTimeout(connectionTimeout)
+                .connectTimeout(connectionTimeout)
+                .bodyForm()
+                .bodyString(data, ContentType.APPLICATION_JSON)
+                .execute()
+                .returnContent()
+                .asString();
+    }
+
+    /**
+     * post json
+     * @param url
+     * @param data
+     * @param headers
+     * @return
+     * @throws IOException
+     */
+    public String postJson(String url, String data, Map<String,String> headers)
+            throws IOException {
+        logger.info("sending request - POST " + url);
+        return Request.Post(url).socketTimeout(connectionTimeout)
+                .connectTimeout(connectionTimeout)
+                .bodyForm()
+                .bodyString(data, ContentType.APPLICATION_JSON)
+                .setHeaders(headers(headers))
+                .execute()
+                .returnContent()
+                .asString();
+    }
+
+
     private String queryString(Map<String, Object> params) {
         if (params == null)
             params = new HashMap<String, Object>();
