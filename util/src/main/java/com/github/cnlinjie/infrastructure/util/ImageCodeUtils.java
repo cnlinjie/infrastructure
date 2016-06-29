@@ -1,7 +1,12 @@
 package com.github.cnlinjie.infrastructure.util;
 
+import com.github.cnlinjie.infrastructure.util.spring.FileCopyUtils;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Random;
 
 /**
@@ -13,20 +18,6 @@ public class ImageCodeUtils {
 	public static String FONT_FAMILY = "Arial Black";
 
 	public static Integer FONT_SIZE = 16;
-
-
-
-    public static class VerifyImage {
-        public final String code;
-        public final BufferedImage image;
-        public final String formatName;
-
-        public VerifyImage(String code, BufferedImage image,String formatName) {
-            this.code = code;
-            this.image = image;
-            this.formatName = formatName;
-        }
-    }
 
     /**
      * 生成图形验证码
@@ -75,7 +66,6 @@ public class ImageCodeUtils {
         return new VerifyImage(sRand,image,"JPEG");
 	}
 
-
 	/**
 	 * 生成随机颜色
 	 *
@@ -122,4 +112,26 @@ public class ImageCodeUtils {
 				return String.valueOf(itmp);
 		}
 	}
+
+	public static VerifyImage buildAndSend(int width, int height, int num, OutputStream out) {
+		VerifyImage captcha = getCaptcha(width, height, num);
+		try {
+			ImageIO.write(captcha.image, captcha.formatName, out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return captcha;
+	}
+
+    public static class VerifyImage {
+        public final String code;
+        public final BufferedImage image;
+        public final String formatName;
+
+        public VerifyImage(String code, BufferedImage image,String formatName) {
+            this.code = code;
+            this.image = image;
+            this.formatName = formatName;
+        }
+    }
 }

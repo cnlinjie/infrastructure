@@ -39,7 +39,7 @@ public class HttpHelper {
 
     public String get(String url, Map<String, Object> params)
             throws IOException {
-        logger.info("sending request - GET " + url);
+        logger.debug("sending request - GET " + url);
         return Request.Get(url + queryString(params))
                 .socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
@@ -50,7 +50,7 @@ public class HttpHelper {
 
     public String get(String url, Map<String, Object> params, Map<String,String> headers)
             throws IOException {
-        logger.info("sending request - GET " + url);
+        logger.debug("sending request - GET " + url);
         System.out.println(url + queryString(params));
         return Request.Get(url + queryString(params))
                 .socketTimeout(connectionTimeout)
@@ -63,7 +63,7 @@ public class HttpHelper {
 
     public String getFile(String url, Map<String, Object> params,
                           final OutputStream outputStream) throws IOException {
-        logger.info("sending request - GET " + url);
+        logger.debug("sending request - GET " + url);
         return Request.Get(url + queryString(params)).socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
                 .execute()
@@ -72,7 +72,7 @@ public class HttpHelper {
 
     public String post(String url, Map<String, Object> data)
             throws IOException {
-        logger.info("sending request - POST " + url);
+        logger.debug("sending request - POST " + url);
         return Request.Post(url).socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
                 .bodyForm(form(data), CharsetUtils.get("utf-8"))
@@ -83,7 +83,7 @@ public class HttpHelper {
 
     public String post(String url, Map<String, Object> data, Map<String,String> headers)
             throws IOException {
-        logger.info("sending request - POST " + url);
+        logger.debug("sending request - POST " + url);
         return Request.Post(url).socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
                 .bodyForm(form(data), CharsetUtils.get("utf-8"))
@@ -95,7 +95,7 @@ public class HttpHelper {
 
     public String post(String url, InputStream fileStream, Map<String, Object> params)
             throws IOException {
-        logger.info("sending request - POST " + url);
+        logger.debug("sending request - POST " + url);
 
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
@@ -124,8 +124,8 @@ public class HttpHelper {
 
     public String post(String url, File file, Map<String, Object> params)
             throws IOException {
-        logger.info("sending request - POST " + url);
-        logger.info("file:" + file.getName());
+        logger.debug("sending request - POST " + url);
+        logger.debug("file:" + file.getName());
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
                 .setCharset(Charset.forName("UTF-8"))
@@ -148,7 +148,7 @@ public class HttpHelper {
      */
     public String post(String url, String data)
             throws IOException {
-        logger.info("sending request - POST " + url);
+        logger.debug("sending request - POST " + url);
         return Request.Post(url).socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
                 .bodyForm()
@@ -167,7 +167,7 @@ public class HttpHelper {
      */
     public String postJson(String url, String data)
             throws IOException {
-        logger.info("sending request - POST " + url);
+        logger.debug("sending request - POST " + url);
         return Request.Post(url).socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
                 .bodyForm()
@@ -187,7 +187,7 @@ public class HttpHelper {
      */
     public String postJson(String url, String data, Map<String,String> headers)
             throws IOException {
-        logger.info("sending request - POST " + url);
+        logger.debug("sending request - POST " + url);
         return Request.Post(url).socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
                 .bodyForm()
