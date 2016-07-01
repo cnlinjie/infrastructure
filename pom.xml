@@ -182,6 +182,16 @@
             </dependency>
             <!-- // POI  -->
 
+            <!-- 邮件 -->
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-email</artifactId>
+                <version>1.4</version>
+            </dependency>
+
+            <!-- // 邮件 -->
+
             <!-- Test -->
             <dependency>
                 <groupId>junit</groupId>
