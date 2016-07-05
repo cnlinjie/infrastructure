@@ -20,7 +20,7 @@ public final class RegexUtils {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkEmail(String email) {
-        String regex = "\\w+@\\w+\\.[a-z]+(\\.[a-z]+)?";
+        String regex = "\\w+([-+.]\\w+)*@\\w+([-+.]\\w+)*\\.[a-z]+(\\.[a-z]+)?";
         return Pattern.matches(regex, email);
     }
 
@@ -44,7 +44,7 @@ public final class RegexUtils {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkMobile(String mobile) {
-        String regex = "(\\+\\d+)?1[3458]\\d{9}$";
+        String regex = "(\\+\\d+)?1[34578]\\d{9}$";
         return Pattern.matches(regex,mobile);
     }
 
