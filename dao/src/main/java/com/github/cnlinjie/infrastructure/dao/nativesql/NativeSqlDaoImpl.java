@@ -24,25 +24,12 @@ import java.util.Map;
 public class NativeSqlDaoImpl implements INativeSqlDao {
 
 
-    private boolean useCurrentSession = false;
-
+    private static Logger logger = LoggerFactory.getLogger(NativeSqlDaoImpl.class);
     protected SessionFactory sessionFactory;
-
+    private boolean useCurrentSession = true;
     private Session session;
 
-
-    private static Logger logger = LoggerFactory.getLogger(NativeSqlDaoImpl.class);
-
     public NativeSqlDaoImpl() {
-    }
-
-    /**
-     * 设置Hibernate sessionFactory
-     *
-     * @param sessionFactory
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     /**
@@ -52,6 +39,15 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
      */
     public SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    /**
+     * 设置Hibernate sessionFactory
+     *
+     * @param sessionFactory
+     */
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     /**
