@@ -3,6 +3,7 @@ package com.github.cnlinjie.infrastructure.web.resolver;
 import com.alibaba.fastjson.JSON;
 import com.github.cnlinjie.infrastructure.web.Constant;
 import com.github.cnlinjie.infrastructure.web.exception.CommonException;
+import com.github.cnlinjie.infrastructure.web.exception.HttpNetException;
 import com.github.cnlinjie.infrastructure.web.exception.MyNoHandlerFoundException;
 import com.github.cnlinjie.infrastructure.web.model.RetModel;
 import org.slf4j.Logger;
@@ -37,10 +38,11 @@ import java.io.OutputStream;
  */
 public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExceptionResolver {
 
-    private String http400 = "/common/404";
-    private String http404 = "/common/404";
-    private String http405 = "/common/404";
-    private String http500 = "/common/404";
+    protected String http400 = "/common/404";
+    protected String http404 = "/common/404";
+    protected String http405 = "/common/404";
+    protected String http500 = "/common/404";
+    protected String netError = "/common/net-error";
 
     protected String getHttp400 () {
         return http400;
@@ -59,6 +61,10 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
         return http500;
     }
 
+    protected String getNetError () {
+        return netError;
+    }
+
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultHandler2ExceptionResolver.class);
 
@@ -68,6 +74,10 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
             if (ex instanceof CommonException) {
 
                 return handleCommonException((CommonException) ex, request, response, handler);
+
+            } else if (ex instanceof HttpNetException) {
+
+                handleHttpNetException((HttpNetException) ex, request, response, handler);
 
             } else if (ex instanceof IllegalArgumentException) {
 
@@ -146,6 +156,24 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
         }
         return null;
     }
+
+    /**
+     * 处理网络连不上
+     *
+     * @param ex
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws IOException
+     */
+    protected ModelAndView handleHttpNetException (HttpNetException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        ModelAndView modelAndView = new ModelAndView();
+        handlerMessage(request, response, ex.getLocalizedMessage(), modelAndView, getNetError());
+        modelAndView.addObject("ioMsg", ex.getIoException().getLocalizedMessage());
+        return modelAndView;
+    }
+
 
     protected ModelAndView handleException (Exception ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         ModelAndView modelAndView = new ModelAndView();
@@ -242,22 +270,22 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
      * <p>The default implementation sends an HTTP 400 error, and returns an empty {@code ModelAndView}.
      * Alternatively, a fallback view could be chosen, or the MissingServletRequestParameterException
      * could be rethrown as-is.
-     * @param ex the MissingServletRequestParameterException to be handled
-     * @param request current HTTP request
+     *
+     * @param ex       the MissingServletRequestParameterException to be handled
+     * @param request  current HTTP request
      * @param response current HTTP response
-     * @param handler the executed handler
+     * @param handler  the executed handler
      * @return an empty ModelAndView indicating the exception was handled
      * @throws IOException potentially thrown from response.sendError()
      */
     @Override
-    protected ModelAndView handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+    protected ModelAndView handleMissingServletRequestParameter (MissingServletRequestParameterException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         ModelAndView modelAndView = new ModelAndView();
         pageNotFoundLogger.warn(ex.getMessage());
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        handlerMessage(request,response,ex.getLocalizedMessage(),modelAndView,getHttp400());
+        handlerMessage(request, response, ex.getLocalizedMessage(), modelAndView, getHttp400());
         return modelAndView;
     }
-
 
 
     protected void handlerMessage (HttpServletRequest request, HttpServletResponse response, String msg, ModelAndView modelAndView, String viewName) {

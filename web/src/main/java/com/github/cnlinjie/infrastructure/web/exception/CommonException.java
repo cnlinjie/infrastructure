@@ -14,6 +14,11 @@ public class CommonException extends IllegalArgumentException {
 		this.code = code;
 	}
 
+	public CommonException(Integer code, String message, String... args) {
+		super( String.format(message, args));
+		this.code = code;
+	}
+
 	public Integer getCode() {
 		return code;
 	}
