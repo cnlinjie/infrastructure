@@ -68,6 +68,10 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultHandler2ExceptionResolver.class);
 
+    public DefaultHandler2ExceptionResolver () {
+        setOrder(1);
+    }
+
     @Override
     public ModelAndView resolveException (HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         try {
