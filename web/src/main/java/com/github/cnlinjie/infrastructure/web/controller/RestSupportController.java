@@ -21,7 +21,7 @@ import java.util.List;
  * @author Linjie
  * @date 2015/10/10.
  */
-public class RestSupoortController extends SupportController {
+public class RestSupportController extends SupportController {
 
     private static final Integer DEFALT_ERROR_CODE = -1;
     private static final Integer DEFALT_SCCUSS_CODE = 0;
