@@ -29,11 +29,12 @@ public class RetModel implements Serializable {
         this.data = data;
     }
 
-    public void put(String key,Object value) {
+    public RetModel put(String key,Object value) {
         if (data == null || !(data instanceof Map)) {
             data = Maps.newHashMap();
         }
         ((Map) data).put(key, value);
+        return this;
     }
 
     public RetModel () {
@@ -59,18 +60,26 @@ public class RetModel implements Serializable {
         return errCode;
     }
 
-    public void setErrCode (Integer errCode) {
+    public RetModel setErrCode (Integer errCode) {
         this.errCode = errCode;
+        return this;
     }
 
     public String getMsg () {
         return msg;
     }
 
-    public void setMsg (String msg) {
+    public RetModel setMsg (String msg) {
         this.msg = msg;
+        return this;
     }
 
+    public static RetModel get(){
+        return new RetModel(Constant.DEFAULT_ERRCODE_SUCCESS,"SUCCESS", new Object());
+    }
 
+    public static RetModel error(){
+        return new RetModel(Constant.DEFAULT_ERRCODE_FAIL,"FAIL", new Object());
+    }
 
 }
