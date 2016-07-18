@@ -4,6 +4,7 @@ import com.github.cnlinjie.infrastructure.web.Constant;
 import com.google.common.collect.Maps;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,8 +26,9 @@ public class RetModel implements Serializable {
         return data;
     }
 
-    public void setData (Object data) {
+    public RetModel setData (Object data) {
         this.data = data;
+        return this;
     }
 
     public RetModel put(String key,Object value) {
@@ -74,12 +76,17 @@ public class RetModel implements Serializable {
         return this;
     }
 
+    public static RetModel Put(String key,Object value){
+        return get().put(key, value);
+    }
+
+
     public static RetModel get(){
-        return new RetModel(Constant.DEFAULT_ERRCODE_SUCCESS,"SUCCESS", new Object());
+        return new RetModel(Constant.DEFAULT_ERRCODE_SUCCESS,"SUCCESS", new HashMap<String,Object>());
     }
 
     public static RetModel error(){
-        return new RetModel(Constant.DEFAULT_ERRCODE_FAIL,"FAIL", new Object());
+        return new RetModel(Constant.DEFAULT_ERRCODE_FAIL,"FAIL", new HashMap<String,Object>());
     }
 
 }
