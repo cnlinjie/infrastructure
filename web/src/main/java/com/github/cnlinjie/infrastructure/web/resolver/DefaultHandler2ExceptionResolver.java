@@ -38,11 +38,11 @@ import java.io.OutputStream;
  */
 public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExceptionResolver {
 
-    protected String http400 = "/common/404";
-    protected String http404 = "/common/404";
-    protected String http405 = "/common/404";
-    protected String http500 = "/common/404";
-    protected String netError = "/common/net-error";
+    protected String http400 = "/error/404";
+    protected String http404 = "/error/404";
+    protected String http405 = "/error/404";
+    protected String http500 = "/error/404";
+    protected String netError = "/error/net-error";
 
     protected String getHttp400 () {
         return http400;
