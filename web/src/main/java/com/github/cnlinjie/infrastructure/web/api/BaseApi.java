@@ -1,6 +1,8 @@
 package com.github.cnlinjie.infrastructure.web.api;
 
+import com.alibaba.fastjson.JSON;
 import com.github.cnlinjie.infrastructure.util.net.HttpHelper;
+import com.github.cnlinjie.infrastructure.web.exception.HttpNetException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -45,28 +47,58 @@ public class BaseApi {
         return apiBaseUrl + relativeUrl;
     }
 
-    protected String httpGet(String relativeUrl, Map<String, Object> params) throws IOException {
-        return httpHelper.get(apiUrl(relativeUrl), params);
+    protected String httpGet(String relativeUrl, Map<String, Object> params)  {
+        try {
+            return httpHelper.get(apiUrl(relativeUrl), params);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new HttpNetException(500, relativeUrl, JSON.toJSONString(params), e);
+        }
     }
 
-    protected String httpPost(String relativeUrl, Map<String, Object> params) throws IOException {
-        return httpHelper.post(apiUrl(relativeUrl), params);
+    protected String httpPost(String relativeUrl, Map<String, Object> params) {
+        try {
+            return httpHelper.post(apiUrl(relativeUrl), params);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new HttpNetException(500, relativeUrl, JSON.toJSONString(params), e);
+        }
     }
 
-    protected String httpPostJson(String relativeUrl, String jsonStr) throws IOException {
-        return httpHelper.post(apiUrl(relativeUrl), jsonStr);
+    protected String httpPostJson(String relativeUrl, String jsonStr)  {
+        try {
+            return httpHelper.post(apiUrl(relativeUrl), jsonStr);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new HttpNetException(500, relativeUrl, jsonStr, e);
+        }
     }
 
-    protected String httpPostStream(String relativeUrl, InputStream stream, Map<String, Object> params) throws IOException {
-        return httpHelper.post(apiUrl(relativeUrl), stream, params);
+    protected String httpPostStream(String relativeUrl, InputStream stream, Map<String, Object> params)  {
+        try {
+            return httpHelper.post(apiUrl(relativeUrl), stream, params);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new HttpNetException(500, relativeUrl, JSON.toJSONString(params), e);
+        }
     }
 
-    protected String httpPostFile(String relativeUrl, File file, Map<String, Object> params) throws IOException {
-        return httpHelper.post(apiUrl(relativeUrl), file, params);
+    protected String httpPostFile(String relativeUrl, File file, Map<String, Object> params)  {
+        try {
+            return httpHelper.post(apiUrl(relativeUrl), file, params);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new HttpNetException(500, relativeUrl, JSON.toJSONString(params), e);
+        }
     }
 
-    protected String getFile(String relativeUrl, Map<String, Object> params, OutputStream outputStream) throws IOException {
-        return httpHelper.getFile(apiUrl(relativeUrl), params, outputStream);
+    protected String getFile(String relativeUrl, Map<String, Object> params, OutputStream outputStream)  {
+        try {
+            return httpHelper.getFile(apiUrl(relativeUrl), params, outputStream);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new HttpNetException(500, relativeUrl, JSON.toJSONString(params), e);
+        }
     }
 
     protected HttpServletRequest request() {
