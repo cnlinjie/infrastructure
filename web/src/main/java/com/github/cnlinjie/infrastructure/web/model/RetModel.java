@@ -28,6 +28,7 @@ public class RetModel implements Serializable {
 
     public RetModel setData (Object data) {
         this.data = data;
+
         return this;
     }
 
