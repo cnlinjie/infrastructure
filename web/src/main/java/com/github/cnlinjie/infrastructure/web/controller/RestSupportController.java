@@ -83,7 +83,7 @@ public class RestSupportController extends SupportController {
     }
 
     protected RetModel successData () {
-        RetModel data = new RetModel(defaultErrCode(), "");
+        RetModel data = new RetModel(defaultSuccessCode(), "");
         return data;
     }
 

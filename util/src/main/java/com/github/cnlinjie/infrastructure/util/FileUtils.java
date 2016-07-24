@@ -1,8 +1,14 @@
 package com.github.cnlinjie.infrastructure.util;
 
+import com.github.cnlinjie.infrastructure.util.net.FileResponseHandler;
 import com.github.cnlinjie.infrastructure.util.spring.FileCopyUtils;
+import org.apache.http.client.fluent.Request;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URI;
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -65,6 +71,18 @@ public class FileUtils {
         return _uploadFileByUUIDPath(parentDir, fileName, in);
     }
 
+
+    public static String uploadURIByUUIDPath (String parentDir, String fileName, URI uri) throws IOException {
+        String byUUIDRelativePath = getByUUIDRelativePath(parentDir, fileName);
+        String filePath = parentDir + byUUIDRelativePath;
+        FileOutputStream out = new FileOutputStream(filePath);
+        Request.Get(uri)
+                .execute()
+                .handleResponse(new FileResponseHandler(out));
+        return  byUUIDRelativePath;
+    }
+
+
     private static String _uploadFileByUUIDPath (String parentDir, String fileName, InputStream in) throws IOException {
         String byUUIDRelativePath = getByUUIDRelativePath(parentDir, fileName);
         String filePath = parentDir + byUUIDRelativePath;
@@ -73,6 +91,7 @@ public class FileUtils {
         return  byUUIDRelativePath;
     }
 
+
     private static String _uploadFileByUUIDPath (String parentDir, String fileName, byte[] in) throws IOException {
         String byUUIDRelativePath = getByUUIDRelativePath(parentDir, fileName);
         String filePath = parentDir + byUUIDRelativePath;
@@ -80,6 +99,8 @@ public class FileUtils {
         FileCopyUtils.copy(in, out);
         return  byUUIDRelativePath;
     }
+
+
 
     public static String getByUUIDRelativePath (String parentDir, String fileName) throws IOException {
         String uuid = UUID.randomUUID().toString();
