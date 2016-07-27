@@ -151,6 +151,10 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
 
                 return handleNoHandlerFoundException((NoHandlerFoundException) ex, request, response, handler);
 
+            }  else if (ex instanceof IOException && ex.getClass().getSimpleName().equals("ClientAbortException")) {
+
+                return handleClientAbortException((IOException) ex, request, response, handler);
+
             } else {
                 logger.error("Handling of [" + ex.getClass().getName() + "] resulted in Exception", ex);
                 return handleException(ex, request, response, handler);
@@ -160,6 +164,17 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
         }
         return null;
     }
+
+
+
+    protected ModelAndView handleClientAbortException (IOException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        ModelAndView modelAndView = new ModelAndView();
+        logger.debug("ClientAbortException , url:"+request.getRequestURI());
+        return modelAndView;
+    }
+
+
+
 
     /**
      * 处理网络连不上
