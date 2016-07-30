@@ -81,7 +81,7 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
 
             } else if (ex instanceof HttpNetException) {
 
-                handleHttpNetException((HttpNetException) ex, request, response, handler);
+                return  handleHttpNetException((HttpNetException) ex, request, response, handler);
 
             } else if (ex instanceof IllegalArgumentException) {
 
