@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ObjectUtils {
+public class ObjectUtils extends com.github.cnlinjie.infrastructure.util.spring.ObjectUtils{
 
     /**
      * 根据属性名获取属性值
@@ -66,4 +66,6 @@ public class ObjectUtils {
         }
         return value;
     }
+
+
 }
