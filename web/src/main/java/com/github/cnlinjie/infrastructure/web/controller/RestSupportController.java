@@ -54,7 +54,7 @@ public class RestSupportController extends SupportController {
     }
 
     protected RetModel handleCommonException (RetModel data, CommonException e) throws NoSuchMethodException {
-        return data(data, defaultErrCode(), e.getMessage());
+        return data(data, e.getCode(), e.getMessage());
     }
 
     protected RetModel handleIllegalArgumentException (RetModel data, IllegalArgumentException e) throws NoSuchMethodException {

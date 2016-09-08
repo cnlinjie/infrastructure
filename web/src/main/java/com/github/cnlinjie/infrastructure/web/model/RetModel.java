@@ -17,6 +17,7 @@ public class RetModel implements Serializable {
     public static final RetModel SUCCESS = new RetModel(Constant.DEFAULT_ERRCODE_SUCCESS,"SUCCESS", new Object());
 
     protected Integer errCode = Constant.DEFAULT_ERRCODE_SUCCESS;
+    protected Integer code = Constant.DEFAULT_ERRCODE_SUCCESS;
 
     protected String msg = "";
 
@@ -43,12 +44,14 @@ public class RetModel implements Serializable {
     public RetModel () {
     }
 
+
     public RetModel (Object data) {
         this.data = data;
     }
 
     public RetModel (Integer errCode, String msg, Object data) {
         this.errCode = errCode;
+        this.code = errCode;
         this.msg = msg;
         this.data = data;
     }
@@ -56,7 +59,17 @@ public class RetModel implements Serializable {
 
     public RetModel (Integer errCode, String msg) {
         this.errCode = errCode;
+        this.code = errCode;
         this.msg = msg;
+    }
+
+    public Integer getCode () {
+        return code;
+    }
+
+    public void setCode (Integer code) {
+        this.errCode = code;
+        this.code = code;
     }
 
     public Integer getErrCode () {
@@ -64,6 +77,7 @@ public class RetModel implements Serializable {
     }
 
     public RetModel setErrCode (Integer errCode) {
+        this.code = errCode;
         this.errCode = errCode;
         return this;
     }

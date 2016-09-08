@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 public final class BrowserUtils {
 
 
-    //TODO  待实现
-    public enum BrowserType {
-        IE, IE7, IE8, IE9, IE10, Opera, Firefox, Webkit;
-    }
+//    //TODO  待实现
+//    public enum BrowserType {
+//        IE, IE7, IE8, IE9, IE10, Opera, Firefox, Webkit;
+//    }
 
 
     /**
@@ -31,28 +31,28 @@ public final class BrowserUtils {
     }
 
 
-    /**
-     * 判断是否Android
-     *
-     * @param request
-     * @return
-     */
-    public static boolean isAndroid(HttpServletRequest request) {
-        //TODO 判断是否Android
-        return false;
-    }
-
-
-    /**
-     * IOS
-     *
-     * @param request
-     * @return
-     */
-    public static boolean isIOS(HttpServletRequest request) {
-        //TODO  判断是否IOS
-        return false;
-    }
+//    /**
+//     * 判断是否Android
+//     *
+//     * @param request
+//     * @return
+//     */
+//    public static boolean isAndroid(HttpServletRequest request) {
+//        //TODO 判断是否Android
+//        return false;
+//    }
+//
+//
+//    /**
+//     * IOS
+//     *
+//     * @param request
+//     * @return
+//     */
+//    public static boolean isIOS(HttpServletRequest request) {
+//        //TODO  判断是否IOS
+//        return false;
+//    }
 
 
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -42,6 +43,7 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
     protected String http404 = "/error/404";
     protected String http405 = "/error/404";
     protected String http500 = "/error/404";
+    protected String httpMsg = "/error/msg";
     protected String netError = "/error/net-error";
 
     protected String getHttp400 () {
@@ -65,6 +67,9 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
         return netError;
     }
 
+    public String getHttpMsg () {
+        return httpMsg;
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultHandler2ExceptionResolver.class);
 
@@ -151,6 +156,10 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
 
                 return handleNoHandlerFoundException((NoHandlerFoundException) ex, request, response, handler);
 
+            } else if (ex instanceof MaxUploadSizeExceededException ) {
+
+                return handleMaxUploadSizeExceededException((MaxUploadSizeExceededException) ex, request, response, handler);
+
             }  else if (ex instanceof IOException && ex.getClass().getSimpleName().equals("ClientAbortException")) {
 
                 return handleClientAbortException((IOException) ex, request, response, handler);
@@ -201,10 +210,17 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
         return modelAndView;
     }
 
+    protected ModelAndView handleMaxUploadSizeExceededException (MaxUploadSizeExceededException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        ModelAndView modelAndView = new ModelAndView();
+        handlerMessage(request, response, ex.getLocalizedMessage(), modelAndView, getHttpMsg());
+        return modelAndView;
+    }
+
+
     protected ModelAndView handleCommonException (CommonException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         ModelAndView modelAndView = new ModelAndView();
         response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
-        outputStreamWrite(response, data(Constant.DEFAULT_ERRCODE_FAIL, ex.getLocalizedMessage()));
+        outputStreamWrite(response, data(ex.getCode(), ex.getLocalizedMessage()));
         return modelAndView;
     }
 
