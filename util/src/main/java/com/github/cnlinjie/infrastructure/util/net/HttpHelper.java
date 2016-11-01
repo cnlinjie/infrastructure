@@ -3,6 +3,7 @@ package com.github.cnlinjie.infrastructure.util.net;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -29,6 +30,7 @@ public class HttpHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(HttpHelper.class);
     private int connectionTimeout = 600000; // 时间单位：秒
+
 
     public HttpHelper() {
     }

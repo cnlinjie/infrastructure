@@ -20,6 +20,10 @@ public class AListUtils {
         return new AListUtils.AListBuilder(arrayList);
     }
 
+    public static <K>  AListUtils.AListBuilder<K> builder(K k) {
+        return new AListUtils.AListBuilder(new ArrayList<K>());
+    }
+
     public static AListUtils.AListBuilder<Object> builder() {
         return new AListUtils.AListBuilder(Lists.newArrayList());
     }

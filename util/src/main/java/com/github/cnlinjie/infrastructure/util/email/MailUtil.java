@@ -16,7 +16,7 @@ public class MailUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(MailUtil.class);
 
-    public boolean sendHtml (MailInfo mail) {
+    public static boolean sendHtml (MailInfo mail) {
         HtmlEmail email = new HtmlEmail();
         try {
             email.setHtmlMsg(mail.getMessage());
@@ -31,7 +31,51 @@ public class MailUtil {
         }
     }
 
-    private boolean send (MailInfo mail, HtmlEmail email) throws EmailException {
+    public static  boolean send(MailBody body) {
+        HtmlEmail htmlEmail = new HtmlEmail();
+        try {
+            if (body.isHtml()) {
+                htmlEmail.setHtmlMsg(body.getMessage());
+            } else {
+                htmlEmail.setTextMsg(body.getMessage());
+            }
+            MailConfig config = body.getMailConfig();
+            if (config.isSSL()) {
+                htmlEmail.setSSLOnConnect(true);
+                htmlEmail.setSslSmtpPort(config.getPort()+"");
+            }
+            // 发送email
+            // 这里是SMTP发送服务器的名字：163的如下："smtp.163.com"
+            htmlEmail.setHostName(config.getHost());
+            // 字符编码集的设置
+            htmlEmail.setCharset(MailInfo.ENCODEING);
+            // 收件人的邮箱
+            htmlEmail.addTo(body.getReceiver());
+            htmlEmail.setSmtpPort(config.getPort());
+
+            // 发送人的邮箱
+            htmlEmail.setFrom(config.getSender(), config.getName());
+            // 如果需要认证信息的话，设置认证：用户名-密码。分别为发件人在邮件服务器上的注册名称和密码
+            htmlEmail.setAuthentication(config.getUsername(), config.getPassword());
+            // 要发送的邮件主题
+            htmlEmail.setSubject(body.getSubject());
+            // 要发送的信息，由于使用了HtmlEmail，可以在邮件内容中使用HTML标签
+            // 发送
+            String send = htmlEmail.send();
+            logger.debug("email send return:"+send);
+            logger.debug(config.getSender() + " 发送邮件到 " + body.getReceiver());
+        } catch (EmailException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            body = null;
+            htmlEmail = null;
+        }
+        return true;
+    }
+
+
+    private static boolean send (MailInfo mail, HtmlEmail email) throws EmailException {
         // 发送email
         // 这里是SMTP发送服务器的名字：163的如下："smtp.163.com"
         email.setHostName(mail.getHost());
@@ -53,7 +97,7 @@ public class MailUtil {
 
     }
 
-    public boolean sendText (MailInfo mail) {
+    public static boolean sendText (MailInfo mail) {
         // 发送email
         HtmlEmail email = new HtmlEmail();
         try {
@@ -67,6 +111,13 @@ public class MailUtil {
                     + " 失败");
             return false;
         }
+    }
+
+    public static void main (String[] args) {
+        MailConfig mailConfig = new MailConfig("smtp.mxhichina.com", "cdgx_hb@znworld.net", "测试", "cdgx_hb@znworld.net", "Cdgx123456", 465,true);
+        MailBody mailBody = new MailBody(mailConfig, "linj@harme.cn", "测试", "主题");
+        mailBody.getMailConfig().setSSL(true);
+        send(mailBody);
     }
 
     /*public static void main (String[] args) {
