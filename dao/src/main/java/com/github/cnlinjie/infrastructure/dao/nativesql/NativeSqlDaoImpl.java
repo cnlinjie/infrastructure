@@ -27,7 +27,6 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
     private static Logger logger = LoggerFactory.getLogger(NativeSqlDaoImpl.class);
     protected SessionFactory sessionFactory;
     private boolean useCurrentSession = true;
-    private Session session;
 
     public NativeSqlDaoImpl() {
     }
@@ -56,15 +55,11 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
      * @return {@link org.hibernate.Session}
      */
     public Session getSession() {
-        if (null != session && session.isOpen()) {
-            return session;
-        }
         if (useCurrentSession) {
-            this.session = sessionFactory.getCurrentSession();
+            return  sessionFactory.getCurrentSession();
         } else {
-            this.session = sessionFactory.openSession();
+            return sessionFactory.openSession();
         }
-        return session;
     }
 
 

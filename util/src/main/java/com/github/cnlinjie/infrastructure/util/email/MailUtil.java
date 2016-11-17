@@ -42,6 +42,7 @@ public class MailUtil {
             MailConfig config = body.getMailConfig();
             if (config.isSSL()) {
                 htmlEmail.setSSLOnConnect(true);
+                htmlEmail.setSSLCheckServerIdentity(true);
                 htmlEmail.setSslSmtpPort(config.getPort()+"");
             }
             // 发送email

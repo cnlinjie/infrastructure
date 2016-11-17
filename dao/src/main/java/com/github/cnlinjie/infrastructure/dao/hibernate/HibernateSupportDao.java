@@ -32,8 +32,6 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     protected SessionFactory sessionFactory;
 
-    private Session session;
-
     protected Class<T> entityClass;
 
     private static Logger logger = LoggerFactory.getLogger(HibernateSupportDao.class);
@@ -83,15 +81,11 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
      * @return {@link org.hibernate.Session}
      */
     public Session getSession() {
-        if (!useCurrentSession && null != session && session.isOpen()) {
-            return session;
-        }
         if (useCurrentSession) {
-            this.session = sessionFactory.getCurrentSession();
+            return sessionFactory.getCurrentSession();
         } else {
-            this.session = sessionFactory.openSession();
+            return  sessionFactory.openSession();
         }
-        return session;
     }
 
 
