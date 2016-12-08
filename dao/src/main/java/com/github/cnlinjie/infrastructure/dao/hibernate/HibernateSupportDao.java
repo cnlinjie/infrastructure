@@ -640,4 +640,61 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         Page<X> page = new Page<X>(list, totalCount, pageParams.getPageIndex(), pageParams.getPageSize());
         return page;
     }
+
+
+
+
+    @Override
+    public List<T> list (Criterion criterion, PageParams pageParams) {
+        CriteriaParams params = CriteriaParams.Add(criterion);
+        Criteria criteria = createCriteria(params);
+        criteria.setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize());
+        List<T> list = criteria.list();
+        return list;
+    }
+
+    @Override
+    public List<T> list (Criterion criterion, Order order, PageParams pageParams) {
+        CriteriaParams params = CriteriaParams
+                .Add(criterion)
+                .addOrder(order);
+        Criteria criteria = createCriteria(params);
+        criteria.setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize());
+        List<T> list = criteria.list();
+        return list;
+    }
+
+
+
+    @Override
+    public List<T> list (CriteriaParams params, PageParams pageParams) {
+        Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
+        Criteria criteria = createCriteria(params);
+        criteria.setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize());
+        List<T> list = criteria.list();
+        return list;
+    }
+
+
+    @Override
+    public List<T> list (String hql, PageParams pageParams, Object... args) {
+        List list = setParameters(createQuery(hql), args)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize())
+                .list();
+        return list;
+    }
+
+    @Override
+    public List<T> list (String hql, PageParams pageParams, Map<String, Object> args) {
+        List list = createQuery(hql)
+                .setProperties(args)
+                .setFirstResult(pageParams.getStartRowByInt())
+                .setMaxResults(pageParams.getPageSize())
+                .list();
+        return list;
+    }
 }

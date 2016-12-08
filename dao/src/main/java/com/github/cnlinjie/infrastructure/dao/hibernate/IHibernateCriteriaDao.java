@@ -56,11 +56,28 @@ public interface IHibernateCriteriaDao<T, PK extends Serializable> {
 
     /**
      * 查询列表
+     * @param criterion
+     * @param pageParams
+     * @return
+     */
+    public List<T> list(Criterion criterion,PageParams pageParams);
+
+    /**
+     * 查询列表
      * @param criterion 条件
      * @param order 排序
      * @return
      */
     public List<T> list(Criterion criterion,Order order);
+
+    /**
+     * 查询列表
+     * @param criterion
+     * @param order
+     * @param pageParams
+     * @return
+     */
+    public List<T> list(Criterion criterion,Order order,PageParams pageParams);
 
 
     /**
@@ -68,6 +85,17 @@ public interface IHibernateCriteriaDao<T, PK extends Serializable> {
      * @return
      */
     public List<T> list(CriteriaParams params);
+
+
+    /**
+     * 查询参数，因为查询的是实体，所以请不要设置：Projection 这个参数
+     * @param params
+     * @param pageParams
+     * @return
+     */
+    public List<T> list(CriteriaParams params, PageParams pageParams);
+
+
 
     /**
      * 查询分页 实体

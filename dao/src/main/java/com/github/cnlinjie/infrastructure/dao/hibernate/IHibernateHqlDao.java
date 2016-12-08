@@ -40,11 +40,30 @@ public interface IHibernateHqlDao<T, PK extends Serializable> {
 
     /**
      * 查询对应实体的列表
+     * @param hql
+     * @param pageParams
+     * @param args
+     * @return
+     */
+    public List<T> list(String hql,PageParams pageParams, Object... args);
+
+    /**
+     * 查询对应实体的列表
      * @param hql HQL 语句
      * @param args HQL的 Map 参数，如果没有时可不传
      * @return
      */
     public List<T> list(String hql, Map<String, Object> args);
+
+
+    /**
+     * 查询对应实体的列表
+     * @param hql
+     * @param args
+     * @param pageParams
+     * @return
+     */
+    public List<T> list(String hql,PageParams pageParams ,Map<String, Object> args);
 
 
     /**

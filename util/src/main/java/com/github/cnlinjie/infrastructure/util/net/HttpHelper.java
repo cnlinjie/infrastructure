@@ -112,7 +112,7 @@ public class HttpHelper {
                 .asString();
     }
 
-    private void formSet(MultipartEntityBuilder builder, Map<String, Object> data) {
+    protected void formSet(MultipartEntityBuilder builder, Map<String, Object> data) {
         if (null != data && data.size() > 0) {
             for (String name : data.keySet()) {
                 builder.addTextBody(name, objToString(data.get(name)));
@@ -199,7 +199,7 @@ public class HttpHelper {
     }
 
 
-    private String queryString(Map<String, Object> params) {
+    protected String queryString(Map<String, Object> params) {
         if (params == null)
             params = new HashMap<String, Object>();
 
@@ -211,7 +211,7 @@ public class HttpHelper {
         return !plist.isEmpty() ? "?" + StringUtils.join(plist, "&") : "";
     }
 
-    private Header[] headers(Map<String, String> data) {
+    protected Header[] headers(Map<String, String> data) {
         Header[] headers = new Header[data.size()];
         int i = 0;
         for ( String key : data.keySet() ) {
@@ -221,7 +221,7 @@ public class HttpHelper {
         return  headers;
     }
 
-    private List<NameValuePair> form(Map<String, Object> data) {
+    protected List<NameValuePair> form(Map<String, Object> data) {
         if (data == null)
             data = new HashMap<String, Object>();
 
@@ -240,7 +240,7 @@ public class HttpHelper {
         return form.build();
     }
 
-    private String objToString(Object obj) {
+    protected String objToString(Object obj) {
         if (obj instanceof Date) {
             if (obj instanceof java.sql.Date || obj instanceof java.sql.Time
                     || obj instanceof java.sql.Timestamp) {

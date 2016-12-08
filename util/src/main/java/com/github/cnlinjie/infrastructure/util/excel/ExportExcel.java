@@ -2,6 +2,9 @@ package com.github.cnlinjie.infrastructure.util.excel;
 
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,17 +20,19 @@ import java.util.regex.Pattern;
  */
 public class ExportExcel<T> {
 
-    public void exportExcel(Collection<T> dataset, OutputStream out) {
+    private Logger logger = LoggerFactory.getLogger(ExportExcel.class);
+
+    public void exportExcel (Collection<T> dataset, OutputStream out) {
         exportExcel("Sheet", null, dataset, out, "yyyy-MM-dd");
     }
 
-    public void exportExcel(String[] headers, Collection<T> dataset,
-                            OutputStream out) {
+    public void exportExcel (String[] headers, Collection<T> dataset,
+                             OutputStream out) {
         exportExcel("Sheet", headers, dataset, out, "yyyy-MM-dd");
     }
 
-    public void exportExcel(String[] headers, Collection<T> dataset,
-                            OutputStream out, String pattern) {
+    public void exportExcel (String[] headers, Collection<T> dataset,
+                             OutputStream out, String pattern) {
         exportExcel("Sheet", headers, dataset, out, pattern);
     }
 
@@ -42,40 +47,33 @@ public class ExportExcel<T> {
      * @param out     与输出设备关联的流对象，可以将EXCEL文档导出到本地文件或者网络中
      * @param pattern 如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
      */
-    @SuppressWarnings("unchecked")
-    public void exportExcel(String title, String[] headers,
-                            Collection<T> dataset, OutputStream out, String pattern) {
+    @SuppressWarnings ("unchecked")
+    public void exportExcel (String title, String[] headers,
+                             Collection<T> dataset, OutputStream out, String pattern) {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(title);
         HSSFCellStyle style = workbook.createCellStyle();
         style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
         HSSFFont font = workbook.createFont();
-        font.setColor(HSSFColor.VIOLET.index);
         font.setFontHeightInPoints((short) 12);
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-        style.setFont(font);
-        HSSFCellStyle style2 = workbook.createCellStyle();
-        style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-        HSSFFont font2 = workbook.createFont();
-        font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
-        style2.setFont(font2);
 
         // 声明一个画图的顶级管理器
         HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
         HSSFRow row = sheet.createRow(0);
         row.setHeight((short) (25 * 20));
-        for (short i = 0; i < headers.length; i++) {
-            HSSFCell cell = row.createCell(i);
-            cell.setCellStyle(style);
-            HSSFRichTextString text = null;
-            try {
-                text = new HSSFRichTextString(new String(headers[i].getBytes(),"UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+        if (null != headers) {
+            for (short i = 0; i < headers.length; i++) {
+                HSSFCell cell = row.createCell(i);
+                cell.setCellStyle(style);
+                HSSFRichTextString text = null;
+                try {
+                    text = new HSSFRichTextString(new String(headers[i].getBytes(), "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                cell.setCellValue(text);
             }
-            cell.setCellValue(text);
         }
-
         // 遍历集合数据，产生数据行
         Iterator<T> it = dataset.iterator();
         int index = 0;
@@ -85,77 +83,79 @@ public class ExportExcel<T> {
             T t = (T) it.next();
             // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
             Field[] fields = t.getClass().getDeclaredFields();
+            int n =0;
             for (short i = 0; i < fields.length; i++) {
-                row.setHeight((short) (25 * 20));
-                HSSFCell cell = row.createCell(i);
-                cell.setCellStyle(style2);
                 Field field = fields[i];
-                String fieldName = field.getName();
-                String getMethodName = "get"
-                        + fieldName.substring(0, 1).toUpperCase()
-                        + fieldName.substring(1);
-                try {
-                    Class tCls = t.getClass();
-                    Method getMethod = tCls.getMethod(getMethodName,
-                            new Class[]
-                                    {});
-                    Object value = getMethod.invoke(t, new Object[]
-                            {});
-                    // 判断值的类型后进行强制类型转换
-                    String textValue = null;
-                    if (value instanceof Date) {
-                        Date date = (Date) value;
-                        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-                        textValue = sdf.format(date);
-                    } else if (value instanceof byte[]) {
-                        // 有图片时，设置行高为60px;
-                        row.setHeightInPoints(60);
-                        // 设置图片所在列宽度为80px,注意这里单位的一个换算
-                        sheet.setColumnWidth(i, (short) (35.7 * 80));
-                        // sheet.autoSizeColumn(i);
-                        byte[] bsValue = (byte[]) value;
-                        HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0,
-                                1023, 255, (short) 6, index, (short) 6, index);
-                        anchor.setAnchorType(2);
-                        patriarch.createPicture(anchor, workbook.addPicture(
-                                bsValue, HSSFWorkbook.PICTURE_TYPE_JPEG));
-                    } else {
-                        // 其它数据类型都当作字符串简单处理
-                        if (value != null) {
-                            textValue = value.toString();
+                if (!field.isAnnotationPresent(NotExportField.class)) {
+                    row.setHeight((short) (25 * 20));
+                    HSSFCell cell = row.createCell(n);
+                    cell.setCellStyle(style);
+                    String fieldName = field.getName();
+                    String getMethodName = "get"
+                            + fieldName.substring(0, 1).toUpperCase()
+                            + fieldName.substring(1);
+                    try {
+                        Class tCls = t.getClass();
+                        Method getMethod = tCls.getMethod(getMethodName, new Class[]{});
+                        Object value = getMethod.invoke(t, new Object[]
+                                {});
+                        // 判断值的类型后进行强制类型转换
+                        String textValue = null;
+                        if (value instanceof Date) {
+                            Date date = (Date) value;
+                            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                            textValue = sdf.format(date);
+                        } else if (value instanceof byte[]) {
+                            // 有图片时，设置行高为60px;
+                            row.setHeightInPoints(60);
+                            // 设置图片所在列宽度为80px,注意这里单位的一个换算
+                            sheet.setColumnWidth(n, (short) (35.7 * 80));
+                            // sheet.autoSizeColumn(i);
+                            byte[] bsValue = (byte[]) value;
+                            HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0,
+                                    1023, 255, (short) 6, index, (short) 6, index);
+                            anchor.setAnchorType(2);
+                            patriarch.createPicture(anchor, workbook.addPicture(
+                                    bsValue, HSSFWorkbook.PICTURE_TYPE_JPEG));
                         } else {
-                            textValue = "null";
-                        }
+                            // 其它数据类型都当作字符串简单处理
+                            if (value != null) {
+                                textValue = value.toString();
+                            } else {
+                                textValue = " ";
+                            }
 
-                    }
-                    // 如果不是图片数据，就利用正则表达式判断textValue是否全部由数字组成
-                    if (textValue != null) {
-                        Pattern p = Pattern.compile("^//d+(//.//d+)?$");
-                        Matcher matcher = p.matcher(textValue);
-                        if (matcher.matches()) {
-                            // 是数字当作double处理
-                            cell.setCellValue(Double.parseDouble(textValue));
-                        } else {
-                            HSSFRichTextString richString = new HSSFRichTextString(
-                                    textValue);
-                            HSSFFont font3 = workbook.createFont();
-                            font3.setColor(HSSFColor.BLUE.index);
-                            richString.applyFont(font3);
-                            cell.setCellValue(richString);
                         }
+                        // 如果不是图片数据，就利用正则表达式判断textValue是否全部由数字组成
+                        if (textValue != null) {
+                            Pattern p = Pattern.compile("^//d+(//.//d+)?$");
+                            Matcher matcher = p.matcher(textValue);
+                            if (matcher.matches()) {
+                                // 是数字当作double处理
+                                cell.setCellValue(Double.parseDouble(textValue));
+                            } else {
+                                HSSFRichTextString richString = new HSSFRichTextString(
+                                        textValue);
+//                            HSSFFont font3 = workbook.createFont();
+//                            font3.setColor(HSSFColor.BLUE.index);
+                                richString.applyFont(font);
+                                cell.setCellValue(richString);
+                            }
+                        }
+                    } catch (SecurityException e) {
+                        logger.debug("SecurityException :"  + e);
+                    } catch (NoSuchMethodException e) {
+                        logger.debug("NoSuchMethodException :"  + getMethodName);
+                    } catch (IllegalArgumentException e) {
+                        logger.debug("IllegalArgumentException");
+                    } catch (IllegalAccessException e) {
+                        logger.debug("IllegalAccessException");
+                    } catch (InvocationTargetException e) {
+                        logger.debug("InvocationTargetException");
+                    } finally {
+                        // 清理资源
                     }
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }  finally {
-                    // 清理资源
+                    n++;
                 }
             }
         }
@@ -166,7 +166,7 @@ public class ExportExcel<T> {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main (String[] args) {
 
     }
 }
