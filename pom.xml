@@ -58,8 +58,13 @@
     </scm>
 
     <properties>
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+        <!-- 编码 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <project.default.encoding>UTF-8</project.default.encoding>
+
+
         <slf4j-version>1.7.5</slf4j-version>
         <commons-lang3-version>3.3.2</commons-lang3-version>
         <thumbnailator-version>0.4.8</thumbnailator-version>
@@ -314,16 +319,20 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
+                    <encoding>UTF-8</encoding>
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
             </plugin>
 
             <!-- Javadoc -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.3</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -332,7 +341,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
         </plugins>
     </build>
