@@ -108,7 +108,7 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         int start = upperSql.indexOf("FROM");
         int end = sql.length();
         countSql += sql.substring(start, end);
-        logger.info(countSql);
+        logger.debug(countSql);
         return countSql;
     }
 

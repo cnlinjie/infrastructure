@@ -403,7 +403,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         int start = upperhql.indexOf("FROM");
         int end = hql.length();
         counthql += hql.substring(start, end);
-        logger.info(counthql);
+        logger.debug(counthql);
         return counthql;
     }
 
