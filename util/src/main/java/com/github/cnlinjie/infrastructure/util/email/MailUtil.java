@@ -5,6 +5,8 @@ import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * 邮箱发送工具
  *
@@ -51,7 +53,10 @@ public class MailUtil {
             // 字符编码集的设置
             htmlEmail.setCharset(MailInfo.ENCODEING);
             // 收件人的邮箱
-            htmlEmail.addTo(body.getReceiver());
+            List<String> receivers = body.getReceivers();
+            for (String receiver : receivers) {
+                htmlEmail.addTo(receiver);
+            }
             htmlEmail.setSmtpPort(config.getPort());
 
             // 发送人的邮箱
@@ -64,7 +69,7 @@ public class MailUtil {
             // 发送
             String send = htmlEmail.send();
             logger.debug("email send return:"+send);
-            logger.debug(config.getSender() + " 发送邮件到 " + body.getReceiver());
+//            logger.debug(config.getSender() + " 发送邮件到 " + body.getReceiver());
         } catch (EmailException e) {
             e.printStackTrace();
             return false;

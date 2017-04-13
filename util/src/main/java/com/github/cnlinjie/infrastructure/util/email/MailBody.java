@@ -1,5 +1,9 @@
 package com.github.cnlinjie.infrastructure.util.email;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 /**
  * @author linjie
  * @version 0.0.1
@@ -8,28 +12,49 @@ package com.github.cnlinjie.infrastructure.util.email;
 public class MailBody {
 
     private MailConfig mailConfig;
-    private String receiver; // 收件人的邮箱
+//    private String receiver; // 收件人的邮箱
     private String message;
     private String subject;
     private boolean isHtml= false;
 
+    private List<String> receivers = Lists.newArrayList();
 
     public MailBody () {
     }
 
     public MailBody (MailConfig mailConfig, String receiver, String message, String subject) {
         this.mailConfig = mailConfig;
-        this.receiver = receiver;
+//        this.receiver = receiver;
         this.message = message;
         this.subject = subject;
+        receivers.add(receiver);
     }
 
     public MailBody (MailConfig mailConfig, String receiver, String message, String subject, boolean isHtml) {
         this.mailConfig = mailConfig;
-        this.receiver = receiver;
+//        this.receiver = receiver;
         this.message = message;
         this.subject = subject;
         this.isHtml = isHtml;
+        receivers.add(receiver);
+    }
+
+
+    public MailBody (MailConfig mailConfig, List<String> receivers, String message, String subject) {
+        this.mailConfig = mailConfig;
+//        this.receiver = receiver;
+        this.message = message;
+        this.subject = subject;
+        this.receivers.addAll(receivers);
+    }
+
+    public MailBody (MailConfig mailConfig, List<String> receivers, String message, String subject, boolean isHtml) {
+        this.mailConfig = mailConfig;
+//        this.receiver = receiver;
+        this.message = message;
+        this.subject = subject;
+        this.isHtml = isHtml;
+        this.receivers.addAll(receivers);
     }
 
 
@@ -51,14 +76,14 @@ public class MailBody {
         return this;
     }
 
-    public String getReceiver () {
-        return receiver;
+    public List<String> getReceivers () {
+        return receivers;
     }
 
-    public MailBody setReceiver (String receiver) {
-        this.receiver = receiver;
-        return this;
-    }
+//    public MailBody setReceiver (String receiver) {
+//        this.receiver = receiver;
+//        return this;
+//    }
 
     public String getMessage () {
         return message;
@@ -76,6 +101,14 @@ public class MailBody {
     public MailBody setHtml (boolean html) {
         isHtml = html;
         return this;
+    }
+
+    public void addTo(String receiver) {
+        receivers.add(receiver);
+    }
+
+    public void addTo(List<String> receivers) {
+        this.receivers.addAll(receivers);
     }
 
 }
