@@ -183,7 +183,17 @@ public class DaoImpl<T,PK extends Serializable> extends HibernateSupportDao<T,PK
         return sqlDao.sqlListObjects(sql,args);
     }
 
-    
+    @Override
+    public <X> List<X> sqlListX(String sql, Object... args) {
+        return sqlDao.sqlListX(sql, args);
+    }
+
+    @Override
+    public <X> List<X> sqlListX(String sql, Map<String, Object> args) {
+        return sqlDao.sqlListX(sql, args);
+    }
+
+
     public Page<Object[]> sqlPageObjects(String sql, PageParams pageParams, Object... args) {
         return  sqlDao.sqlPageObjects(sql, pageParams, args);
     }

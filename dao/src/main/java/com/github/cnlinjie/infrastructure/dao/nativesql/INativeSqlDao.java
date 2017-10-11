@@ -83,6 +83,9 @@ public interface INativeSqlDao {
      */
     public List<Object[]> sqlListObjects(String sql, Object... args);
 
+
+
+
     /**
      * 查询多条记录，每条记录以Object[]方式存储
      *
@@ -91,6 +94,28 @@ public interface INativeSqlDao {
      * @return
      */
     public List<Object[]> sqlListObjects(String sql, Map<String, Object> args);
+
+    /**
+     * 查询多条记录
+     *
+     * @param sql  查询的SQL语句
+     * @param args 参数，如果没有，可不传
+     * @return
+     */
+    public <X> List<X> sqlListX(String sql, Object... args);
+
+
+
+    /**
+     * 查询多条记录
+     *
+     * @param sql  查询的SQL语句
+     * @param args 参数，如果没有，可不传
+     * @return
+     */
+    public <X> List<X> sqlListX(String sql, Map<String, Object> args);
+
+
 
     /**
      * 分页查询多条记录，每条记录以Object[]方式存储

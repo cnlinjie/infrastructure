@@ -168,7 +168,19 @@ public class NativeSqlDaoImpl implements INativeSqlDao {
         return list;
     }
 
-    
+    @Override
+    public <X> List<X> sqlListX(String sql, Object... args) {
+        List<X> list = createSQLQuery(sql).setProperties(args).list();
+        return list;
+    }
+
+    @Override
+    public <X> List<X> sqlListX(String sql, Map<String, Object> args) {
+        List<X> list = createSQLQuery(sql).setProperties(args).list();
+        return list;
+    }
+
+
     public Page<Object[]> sqlPageObjects(String sql, PageParams pageParams, Object... args) {
         List list = setParameters(createSQLQuery(sql), args)
                 .setFirstResult(pageParams.getStartRowByInt())

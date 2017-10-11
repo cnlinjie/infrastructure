@@ -37,10 +37,26 @@ public class HttpHelper {
         this.connectionTimeout = connectionTimeout;
     }
 
+    public String get(String url)
+            throws IOException {
+        logger.info("sending request - GET " + url);
+        return Request.Get(url)
+                .socketTimeout(connectionTimeout)
+                .connectTimeout(connectionTimeout)
+                .execute()
+                .returnContent()
+                .asString();
+    }
+
     public String get(String url, Map<String, Object> params)
             throws IOException {
         logger.info("sending request - GET " + url);
-        return Request.Get(url + queryString(params))
+        String paramsStr = queryString(params);
+        if (!"".equals(paramsStr)) {
+            url  = url +  (url.lastIndexOf('?') == -1 ? "?" : "") + paramsStr;
+        }
+
+        return Request.Get(url)
                 .socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
                 .execute()
@@ -51,7 +67,11 @@ public class HttpHelper {
     public String get(String url, Map<String, Object> params, Map<String,String> headers)
             throws IOException {
         logger.info("sending request - GET " + url);
-        System.out.println(url + queryString(params));
+        String paramsStr = queryString(params);
+        if (!"".equals(paramsStr)) {
+            url  = url +  (url.lastIndexOf('?') == -1 ? "?" : "")+ paramsStr;;
+        }
+
         return Request.Get(url + queryString(params))
                 .socketTimeout(connectionTimeout)
                 .connectTimeout(connectionTimeout)
@@ -199,16 +219,17 @@ public class HttpHelper {
     }
 
 
+
     protected String queryString(Map<String, Object> params) {
         if (params == null)
             params = new HashMap<String, Object>();
 
         List<String> plist = new ArrayList<String>();
         for (String name : params.keySet()) {
-            plist.add(name + "=" + objToString(params.get(name)));
+            plist.add(  name + "=" +URIUtil.encode( objToString(params.get(name))));
         }
 
-        return !plist.isEmpty() ? "?" + StringUtils.join(plist, "&") : "";
+        return !plist.isEmpty() ? (StringUtils.join(plist, "&")) : "";
     }
 
     protected Header[] headers(Map<String, String> data) {

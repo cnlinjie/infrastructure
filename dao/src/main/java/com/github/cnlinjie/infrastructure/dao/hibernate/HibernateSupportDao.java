@@ -95,9 +95,13 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
      * @param params 可变长度的Criterion数组
      * @return @return {@link org.hibernate.Criteria}
      */
-    protected Criteria createCriteria(CriteriaParams params) {
+    public Criteria createCriteria(CriteriaParams params) {
 
         Criteria criteria = getSession().createCriteria(this.entityClass);
+
+        if (params.getTransformer() != null) {
+            criteria.setResultTransformer(params.getTransformer());
+        }
 
         for (Criterion criterion : params.getCriterions()) {
             criteria.add(criterion);
@@ -111,7 +115,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return criteria;
     }
 
-    protected Long getCountRow(CriteriaParams params) {
+    public Long getCountRow(CriteriaParams params) {
         Object total = createCriteria(
                 CriteriaParams
                         .Add(params.getCriterions().toArray(new Criterion[]{}))
@@ -120,7 +124,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return (Long) total;
     }
 
-    protected Long getCountRow(Criteria criteria) {
+    public Long getCountRow(Criteria criteria) {
         Object total = criteria.setProjection(Projections.rowCount()).uniqueResult();
         return (Long) total;
     }

@@ -1,6 +1,7 @@
 package com.github.cnlinjie.infrastructure.dao.hibernate;
 
 import org.hibernate.criterion.*;
+import org.hibernate.transform.ResultTransformer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +20,16 @@ public class CriteriaParams {
     private ProjectionList projectionList = Projections.projectionList();
 
     private List<Order> orders = new ArrayList<Order>();
+
+    private ResultTransformer transformer;
+
+    public ResultTransformer getTransformer() {
+        return transformer;
+    }
+
+    public void setTransformer(ResultTransformer transformer) {
+        this.transformer = transformer;
+    }
 
     public static CriteriaParams get() {
         return new CriteriaParams();
@@ -72,15 +83,15 @@ public class CriteriaParams {
     }
 
 
-    List<Criterion> getCriterions() {
+    public List<Criterion> getCriterions() {
         return criterions;
     }
 
-    Projection getProjection() {
+    public Projection getProjection() {
         return projection;
     }
 
-    List<Order> getOrders() {
+    public List<Order> getOrders() {
         return orders;
     }
 }
