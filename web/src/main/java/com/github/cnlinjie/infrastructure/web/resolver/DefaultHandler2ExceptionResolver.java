@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,11 +95,7 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
 
                 return handleMyNoHandlerFoundException((MyNoHandlerFoundException) ex, request, response, handler);
 
-            } else if (ex instanceof NoSuchRequestHandlingMethodException) {
-
-                return handleNoSuchRequestHandlingMethod((NoSuchRequestHandlingMethodException) ex, request, response, handler);
-
-            } else if (ex instanceof HttpRequestMethodNotSupportedException) {
+            }  else if (ex instanceof HttpRequestMethodNotSupportedException) {
 
                 return handleHttpRequestMethodNotSupported((HttpRequestMethodNotSupportedException) ex, request, response, handler);
 
@@ -258,24 +253,7 @@ public abstract class DefaultHandler2ExceptionResolver extends DefaultHandlerExc
         return modelAndView;
     }
 
-    /**
-     * 404
-     *
-     * @param ex
-     * @param request
-     * @param response
-     * @param handler
-     * @return
-     * @throws IOException
-     */
-    @Override
-    protected ModelAndView handleNoSuchRequestHandlingMethod (NoSuchRequestHandlingMethodException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        ModelAndView modelAndView = new ModelAndView();
-        pageNotFoundLogger.warn(ex.getMessage());
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        handlerMessage(request, response, ex.getLocalizedMessage(), modelAndView, getHttp404());
-        return modelAndView;
-    }
+
 
     /**
      * 405
