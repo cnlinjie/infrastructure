@@ -6,14 +6,13 @@ import com.github.cnlinjie.infrastructure.util.ReflectionUtils;
 import com.github.cnlinjie.infrastructure.util.spring.Assert;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
-import org.hibernate.internal.AbstractQueryImpl;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,6 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
 
     /**
-     *
      * @return
      */
     public boolean isUseCurrentSession() {
@@ -51,6 +49,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
     /**
      * 设置是否从当前线程读取Session，如果是 {false} 则，使用openSession
+     *
      * @param useCurrentSession
      */
     public void setUseCurrentSession(boolean useCurrentSession) {
@@ -84,7 +83,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         if (useCurrentSession) {
             return sessionFactory.getCurrentSession();
         } else {
-            return  sessionFactory.openSession();
+            return sessionFactory.openSession();
         }
     }
 
@@ -159,23 +158,23 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return list(CriteriaParams.Add(criterion));
     }
 
-    
+
     public List<T> list(Criterion criterion, Order order) {
         return list(CriteriaParams.Add(criterion).addOrder(order));
     }
 
-    
+
     public List<T> list(CriteriaParams params) {
-        Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
+        Assert.isNull(params.getProjection(), "查询值为实体，请勿设置 projection 值");
         return createCriteria(params).list();
     }
 
-    
+
     public Page<T> page(Criterion criterion, PageParams pageParams) {
         return page(CriteriaParams.Add(criterion), pageParams);
     }
 
-    
+
     public Page<T> page(Criterion criterion, PageParams pageParams, Order order) {
         return page(
                 CriteriaParams
@@ -184,9 +183,9 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                 pageParams);
     }
 
-    
+
     public Page<T> page(CriteriaParams params, PageParams pageParams) {
-        Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
+        Assert.isNull(params.getProjection(), "查询值为实体，请勿设置 projection 值");
         Criteria criteria =
                 createCriteria(params);
         Long total = getCountRow(params);
@@ -197,12 +196,12 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return page;
     }
 
-    
+
     public Page<T> page(PageParams pageParams) {
         return page(CriteriaParams.get(), pageParams);
     }
 
-    
+
     public Object uniqueValue(Criterion criterion, Projection projection) {
         Criteria criteria = createCriteria(
                 CriteriaParams
@@ -213,7 +212,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return criteria.uniqueResult();
     }
 
-    
+
     public <X> X uniqueObject(Criterion criterion, Projection projection) {
         Criteria criteria = createCriteria(
                 CriteriaParams
@@ -228,7 +227,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return null;
     }
 
-    
+
     public <X> List<X> listObjects(Criterion criterion, Projection projection) {
 
         return listObjects(CriteriaParams
@@ -236,7 +235,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                 .addProjection(projection));
     }
 
-    
+
     public <X> List<X> listObjects(Criterion criterion, Projection projection, Order order) {
         return listObjects(CriteriaParams
                 .Add(criterion)
@@ -244,14 +243,14 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                 .addOrder(order));
     }
 
-    
+
     public <X> List<X> listObjects(CriteriaParams params) {
         Criteria criteria = createCriteria(params);
         List<X> list = criteria.list();
         return list;
     }
 
-    
+
     public <X> Page<X> pageObjects(Criterion criterion, Projection projection, PageParams pageParams) {
         return pageObjects(
                 CriteriaParams
@@ -261,7 +260,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         );
     }
 
-    
+
     public <X> Page<X> pageObjects(Criterion criterion, Projection projection, Order order, PageParams pageParams) {
 
         return pageObjects(
@@ -273,8 +272,8 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         );
     }
 
-    
-    public <X>  Page<X> pageObjects(CriteriaParams params, PageParams pageParams) {
+
+    public <X> Page<X> pageObjects(CriteriaParams params, PageParams pageParams) {
         Criteria criteria = createCriteria(params);
 
         Long total = getCountRow(params);
@@ -285,12 +284,12 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return page;
     }
 
-    
+
     public Map<String, Object> uniqueMap(Criterion criterion, Projection projection) {
         return uniqueMap(CriteriaParams.Add(criterion).addProjection(projection));
     }
 
-    
+
     public Map<String, Object> uniqueMap(CriteriaParams params) {
         Map<String, Object> map = (Map<String, Object>) createCriteria(params)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
@@ -298,7 +297,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return map;
     }
 
-    
+
     public List<Map<String, Object>> listMaps(Criterion criterion, Projection projection) {
         return listMaps(
                 CriteriaParams
@@ -306,7 +305,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                         .addProjection(projection));
     }
 
-    
+
     public List<Map<String, Object>> listMaps(Criterion criterion, Projection projection, Order order) {
         return listMaps(
                 CriteriaParams
@@ -315,7 +314,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                         .addOrder(order));
     }
 
-    
+
     public List<Map<String, Object>> listMaps(CriteriaParams params) {
         Assert.notNull(params.getProjection(), "需要指定投影的列名");
         List<Map<String, Object>> maps = createCriteria(params)
@@ -324,7 +323,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return maps;
     }
 
-    
+
     public Page<Map<String, Object>> pageMaps(Criterion criterion, Projection projection, PageParams pageParams) {
         return pageMaps(CriteriaParams
                         .Add(criterion)
@@ -332,7 +331,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                 pageParams);
     }
 
-    
+
     public Page<Map<String, Object>> pageMaps(Criterion criterion, Projection projection, Order order, PageParams pageParams) {
 
         return pageMaps(CriteriaParams
@@ -342,7 +341,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
                 pageParams);
     }
 
-    
+
     public Page<Map<String, Object>> pageMaps(CriteriaParams params, PageParams pageParams) {
         Assert.notNull(params.getProjection(), "需要指定投影的列名");
         List<Map<String, Object>> maps =
@@ -368,20 +367,8 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         if (ArrayUtils.isEmpty(values)) {
             return query;
         }
-        AbstractQueryImpl impl = (AbstractQueryImpl) query;
-        String[] params = impl.getNamedParameters();
-
-        int methodParameterPosition = params.length - 1;
-
-        if (impl.hasNamedParameters()) {
-            for (String p : params) {
-                Object o = values[methodParameterPosition--];
-                query.setParameter(p, o);
-            }
-        } else {
-            for (Integer i = 0; i < values.length; i++) {
-                query.setParameter(i, values[i]);
-            }
+        for (Integer i = 0; i < values.length; i++) {
+            query.setParameter(i, values[i]);
         }
         return query;
     }
@@ -411,7 +398,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return counthql;
     }
 
-    
+
     public T unique(String hql, Object... args) {
         T t = (T) setParameters(createQuery(hql), args)
                 .uniqueResult();
@@ -425,19 +412,19 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return t;
     }
 
-    
+
     public List<T> list(String hql, Object... args) {
         List list = setParameters(createQuery(hql), args).list();
         return list;
     }
 
-    
+
     public List<T> list(String hql, Map<String, Object> args) {
         List list = createQuery(hql).setProperties(args).list();
         return list;
     }
 
-    
+
     public Page<T> page(String hql, PageParams pageParams, Object... args) {
         List list = setParameters(createQuery(hql), args)
                 .setFirstResult(pageParams.getStartRowByInt())
@@ -448,7 +435,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return page;
     }
 
-    
+
     public Page<T> page(String hql, PageParams pageParams, Map<String, Object> args) {
         List list = createQuery(hql)
                 .setProperties(args)
@@ -460,17 +447,17 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return page;
     }
 
-    
+
     public <X> X uniqueValue(String hql, Object... args) {
         return (X) setParameters(createQuery(hql), args).uniqueResult();
     }
 
-    
+
     public <X> X uniqueValue(String hql, Map<String, Object> args) {
         return (X) createQuery(hql).setProperties(args).uniqueResult();
     }
 
-    
+
     public <X> X uniqueObject(String hql, Object... args) {
         List<X> list = listObjects(hql, args);
         if (list.size() > 0) {
@@ -479,7 +466,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return null;
     }
 
-    
+
     public <X> X uniqueObject(String hql, Map<String, Object> args) {
         List<X> list = listObjects(hql, args);
         if (list.size() > 0) {
@@ -488,19 +475,19 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return null;
     }
 
-    
+
     public <X> List<X> listObjects(String hql, Object... args) {
         List list = setParameters(createQuery(hql), args).list();
         return list;
     }
 
-    
+
     public <X> List<X> listObjects(String hql, Map<String, Object> args) {
         List list = createQuery(hql).setProperties(args).list();
         return list;
     }
 
-    
+
     public <X> Page<X> pageObjects(String hql, PageParams pageParams, Object... args) {
         List<X> list = setParameters(createQuery(hql), args)
                 .setFirstResult(pageParams.getStartRowByInt())
@@ -511,7 +498,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return page;
     }
 
-    
+
     public <X> Page<X> pageObjects(String hql, PageParams pageParams, Map<String, Object> args) {
         List<X> list = createQuery(hql)
                 .setProperties(args)
@@ -523,7 +510,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return page;
     }
 
-    
+
     public Map<String, Object> uniqueMap(String hql, Object... args) {
         Map<String, Object> map = (Map<String, Object>)
                 setParameters(createQuery(hql), args)
@@ -532,7 +519,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return map;
     }
 
-    
+
     public Map<String, Object> uniqueMap(String hql, Map<String, Object> args) {
         Map<String, Object> map = (Map<String, Object>)
                 createQuery(hql).setProperties(args)
@@ -541,7 +528,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return map;
     }
 
-    
+
     public List<Map<String, Object>> listMaps(String hql, Object... args) {
         List<Map<String, Object>> maps = setParameters(createQuery(hql), args)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
@@ -549,7 +536,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return maps;
     }
 
-    
+
     public List<Map<String, Object>> listMaps(String hql, Map<String, Object> args) {
         List<Map<String, Object>> maps = createQuery(hql).setProperties(args)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
@@ -558,7 +545,6 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
 
-    
     public Page<Map<String, Object>> pageMaps(String hql, PageParams pageParams, Object... args) {
         List<Map<String, Object>> list = setParameters(createQuery(hql), args)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
@@ -570,7 +556,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return page;
     }
 
-    
+
     public Page<Map<String, Object>> pageMaps(String hql, PageParams pageParams, Map<String, Object> args) {
         List<Map<String, Object>> list =
                 createQuery(hql)
@@ -585,7 +571,6 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
 
-    
     public <X> X uniqueBean(String hql, Class<? extends X> transferClass, Object... args) {
         X x = (X) setParameters(createQuery(hql), args)
                 .setResultTransformer(Transformers.aliasToBean(transferClass))
@@ -593,7 +578,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return x;
     }
 
-    
+
     public <X> X uniqueBean(String hql, Class<? extends X> transferClass, Map<String, Object> args) {
         X x = (X) createQuery(hql)
                 .setProperties(args)
@@ -602,7 +587,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return x;
     }
 
-    
+
     public <X> List<X> listBeans(String hql, Class<? extends X> transferClass, Object... args) {
         List<X> list = setParameters(createQuery(hql), args)
                 .setResultTransformer(Transformers.aliasToBean(transferClass))
@@ -610,7 +595,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return list;
     }
 
-    
+
     public <X> List<X> listBeans(String hql, Class<? extends X> transferClass, Map<String, Object> args) {
         List<X> list = createQuery(hql).setProperties(args)
                 .setResultTransformer(Transformers.aliasToBean(transferClass))
@@ -618,7 +603,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return list;
     }
 
-    
+
     public <X> Page<X> pageBeans(String hql, Class<? extends X> transferClass, PageParams pageParams, Object... args) {
         List<X> list = setParameters(createQuery(hql), args)
                 .setFirstResult(pageParams.getStartRowByInt())
@@ -631,7 +616,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
         return page;
     }
 
-    
+
     public <X> Page<X> pageBeans(String hql, Class<? extends X> transferClass, PageParams pageParams, Map<String, Object> args) {
         List<X> list =
                 createQuery(hql)
@@ -646,10 +631,8 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
 
-
-
     @Override
-    public List<T> list (Criterion criterion, PageParams pageParams) {
+    public List<T> list(Criterion criterion, PageParams pageParams) {
         CriteriaParams params = CriteriaParams.Add(criterion);
         Criteria criteria = createCriteria(params);
         criteria.setFirstResult(pageParams.getStartRowByInt())
@@ -659,7 +642,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     @Override
-    public List<T> list (Criterion criterion, Order order, PageParams pageParams) {
+    public List<T> list(Criterion criterion, Order order, PageParams pageParams) {
         CriteriaParams params = CriteriaParams
                 .Add(criterion)
                 .addOrder(order);
@@ -671,10 +654,9 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
 
-
     @Override
-    public List<T> list (CriteriaParams params, PageParams pageParams) {
-        Assert.isNull(params.getProjection(),"查询值为实体，请勿设置 projection 值");
+    public List<T> list(CriteriaParams params, PageParams pageParams) {
+        Assert.isNull(params.getProjection(), "查询值为实体，请勿设置 projection 值");
         Criteria criteria = createCriteria(params);
         criteria.setFirstResult(pageParams.getStartRowByInt())
                 .setMaxResults(pageParams.getPageSize());
@@ -684,7 +666,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
 
 
     @Override
-    public List<T> list (String hql, PageParams pageParams, Object... args) {
+    public List<T> list(String hql, PageParams pageParams, Object... args) {
         List list = setParameters(createQuery(hql), args)
                 .setFirstResult(pageParams.getStartRowByInt())
                 .setMaxResults(pageParams.getPageSize())
@@ -693,7 +675,7 @@ public abstract class HibernateSupportDao<T, PK extends Serializable> implements
     }
 
     @Override
-    public List<T> list (String hql, PageParams pageParams, Map<String, Object> args) {
+    public List<T> list(String hql, PageParams pageParams, Map<String, Object> args) {
         List list = createQuery(hql)
                 .setProperties(args)
                 .setFirstResult(pageParams.getStartRowByInt())

@@ -2,11 +2,8 @@ package com.github.cnlinjie.infrastructure.dao;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * @author Linjie
