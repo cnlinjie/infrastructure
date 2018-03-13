@@ -6,7 +6,7 @@
 
     <groupId>com.github.cnlinjie</groupId>
     <artifactId>infrastructure</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1</version>
     <modules>
         <module>util</module>
         <module>dao</module>
